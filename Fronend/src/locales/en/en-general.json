@@ -1,0 +1,174 @@
+{
+  "buttons": {
+    "next": "Next",
+    "previous": "Back",
+    "close": "Close",
+    "start": "Get started",
+    "nextLesson": "Next lesson",
+    "moreText": "Read more",
+    "lessText": "Hide",
+    "sendSupport": "Message",
+    "joinStream": "Присоединиться",
+    "openStreamLesson": "Узнать больше",
+    "joinStreamNow": "Присоединиться сейчас",
+    "repeatQuiz": "Пройти ёще раз",
+    "delete": "Delete",
+    "wrongQuizReply": "Неправильно!",
+    "correctQuizReply": "Правильно!",
+    "nextQuizQuestion": "К следующему",
+    "checkQuizReply": "Проверить",
+    "finishQuiz": "Завершить",
+    "save": "Save",
+    "try_again": "Try again",
+    "cancel": "Cancel",
+    "select_photo": "Select",
+    "confirm": "Confirm",
+    "continue": "Continue",
+    "back": "Back"
+  },
+  "incorrect_page": {
+    "title": "You followed an incorrect link",
+    "text": "Please contact your teacher for assistance"
+  },
+  "nav_bar": {
+    "favorites": "Favourites",
+    "support": "Questions?"
+  },
+  "main": {
+    "products": "Products",
+    "product_type": "course",
+    "start_product": "Explore",
+    "product_empty_list_title": "No available courses",
+    "product_empty_list": "Your teacher hasn’t published any courses yet. Check back later!",
+    "product_view_disabled": "View disabled",
+    "access_removed": "Access removed",
+    "lesson_scheduled": "The lesson will open in:",
+    "failed_open_lesson": "Failed to load the lesson",
+    "rate_the_lesson": "Rate the lesson",
+    "finish_previous_lesson": "Finish the previous lesson and open the next one",
+    "lesson_schedule_left": {
+      "days": "d.",
+      "hours": "h.",
+      "minutes": "min."
+    },
+    "got_it": "Got it",
+    "ban_text": "Your access to the course [product title] has been revoked",
+    "ban_text_span": "If you believe this is a mistake, please contact your teacher",
+    "ban_contact_support": "Contact support",
+    "product_free": "Free",
+    "tariff_get_access": "Lifetime access",
+    "tariff_buy_now": "Buy now",
+    "tariff_access_to": "Access to",
+    "tariff_access_for": "Access for",
+    "tariff_all_lessons": "all lessons",
+    "tariff_part_lessons": "lesson(s)",
+    "tariff_bonus_content": "bonus content",
+    "select_tariff": "Select a suitable tariff",
+    "lesson_video_compressing": "Video unavailable for now",
+    "symbols": "symbols",
+    "tariff_period": {
+      "days": {
+        "1": "day",
+        "2": "days",
+        "5": "days"
+      },
+      "months": {
+        "1": "month",
+        "2": "months",
+        "5": "months"
+      },
+      "years": {
+        "1": "year",
+        "2": "years",
+        "5": "years"
+      }
+    }
+  },
+  "payment_status": {
+    "select_payment_service": "Select payment method",
+    "external_page": "You’ll be taken to external payment page",
+    "title_success": "Payment successful",
+    "title_success_ton": "Your payment has been initiated",
+    "title_failed": "Payment Failed!!",
+    "text_success": "You have successfully purchased \n[course name] course ",
+    "text_success_ton": "Once your payment is verified, you'll get access to the [course name].",
+    "text_failed": "Looks like your transaction didn’t go through. Don’t worry, no funds were charged.",
+    "button_text_success": "Back to Home page",
+    "button_text_failed": "Try Again",
+    "button_start_learning": "Start learning"
+  },
+  "author": {
+    "greetings": "About the author",
+    "terms_of_use": "Terms of Use",
+    "default_text": "Author of the courses has not added information about himself yet.\u2028Bio and social media links will appear here very soon."
+  },
+  "favourites": {
+    "title": "Favorites",
+    "emptyText": "It looks like you haven't added any lessons to Favorites yet"
+  },
+  "homeworks": {
+    "emptyText": "Вы еще не выполнили <br>ни одного задания",
+    "addText": "Начните учиться уже сегодня",
+    "yourReply": "Ваш ответ"
+  },
+  "lesson": {
+    "compressing_error": "Video is unavailable right now.<br>Сheck back later"
+  },
+  "lessonTabs": {
+    "content": "Content",
+    "materials": "Materials",
+    "homework": "Homework"
+  },
+  "support": {
+    "title": "Got any questions?<br>Message us on Telegram",
+    "empty_link": "Looks like your teacher didn’t add <br> a support link"
+  },
+  "course": {
+    "dividerText": "Finish the previous lesson and open the next one"
+  },
+  "calendar": {
+    "nearestEvents": "Ближайшие ивенты",
+    "calendar": "Календарь"
+  },
+  "quiz": {
+    "chooseOneAnswer": "Выберите один правильный ответ",
+    "chooseSeveralAnswer": "Выберите несколько правильных ответов",
+    "yourResult": "Твой результат",
+    "correctAnswers": "Правильные ответы",
+    "wrongAnswers": "Неправильные ответы"
+  },
+  "profile": {
+    "title": "My profile",
+    "menu": {
+      "language": {
+        "title": "Language",
+        "title_inside": "Language"
+      },
+      "billing_history": {
+        "title": "Billing History",
+        "title_inside": "Billing History",
+        "empty_state": "No transactions yet",
+        "empty_state_text": "Check back later to see your billing history"
+      },
+      "edit_profile": {
+        "title": "Edit profile",
+        "set_profile_photo": "Set profile photo",
+        "name": "Name",
+        "name_placeholder": "Write your name",
+        "gallery": "Gallery"
+      }
+    },
+    "billing_history": {
+      "completed": "Completed",
+      "failed": "Failed",
+      "pending": "Pending"
+    }
+  },
+  "toast_notifications": {
+    "changes_saved": "Changes have been saved",
+    "failed_get_mini_app": "Unable to get mini app name",
+    "image_size_too_large": "Image size is too large",
+    "something_went_wrong": "Something went wrong",
+    "not_enough_money": "Insufficient funds. Please top up your wallet"
+  }
+}

@@ -1,0 +1,174 @@
+{
+  "buttons": {
+    "next": "Далее",
+    "previous": "Назад",
+    "close": "Закрыть",
+    "start": "Начать",
+    "nextLesson": "К следующему уроку",
+    "moreText": "Детальнее",
+    "lessText": "Скрыть",
+    "sendSupport": "Написать",
+    "joinStream": "Присоединиться",
+    "openStreamLesson": "Узнать больше",
+    "joinStreamNow": "Присоединиться сейчас",
+    "repeatQuiz": "Пройти ёще раз",
+    "delete": "Удалить",
+    "wrongQuizReply": "Неправильно!",
+    "correctQuizReply": "Правильно!",
+    "nextQuizQuestion": "К следующему",
+    "checkQuizReply": "Проверить",
+    "finishQuiz": "Завершить",
+    "save": "Сохранить",
+    "try_again": "Попробовать снова",
+    "cancel": "Отменить",
+    "select_photo": "Установить",
+    "confirm": "Подтвердить",
+    "continue": "Продолжить",
+    "back": "Назад"
+  },
+  "nav_bar": {
+    "favorites": "Избранное",
+    "support": "Вопросы?"
+  },
+  "main": {
+    "products": "Продукты",
+    "product_type": "курс",
+    "start_product": "Начать",
+    "product_empty_list_title": "Нет доступных курсов",
+    "product_empty_list": "Ваш учитель еще не опубликовал ни одного курса. Загляните позже!",
+    "product_view_disabled": "Доступ закрыт",
+    "access_removed": "Доступ удалён",
+    "lesson_scheduled": "Урок откроется через:",
+    "failed_open_lesson": "Не удалось загрузить урок",
+    "rate_the_lesson": "Оцените урок",
+    "finish_previous_lesson": "Закончи предыдущий урок, чтобы продолжить",
+    "lesson_schedule_left": {
+      "days": "дн.",
+      "hours": "ч.",
+      "minutes": "мин."
+    },
+    "got_it": "Понятно",
+    "ban_text": "Ваш доступ к курсу [product title] был аннулирован",
+    "ban_text_span": "Если вы считаете, что это ошибка, обратитесь к своему учителю",
+    "ban_contact_support": "Связаться с поддержкой",
+    "product_free": "Бесплатно",
+    "tariff_get_access": "Бессрочный доступ",
+    "tariff_buy_now": "Купить сейчас",
+    "tariff_access_to": "Доступ к",
+    "tariff_access_for": "Доступ на",
+    "tariff_all_lessons": "всем урокам",
+    "tariff_part_lessons": "уроку(-ам)",
+    "tariff_bonus_content": "бонусному контенту",
+    "select_tariff": "Выберите подходящий тариф",
+    "lesson_video_compressing": "Видео пока недоступно",
+    "symbols": "символов",
+    "tariff_period": {
+      "days": {
+        "1": "день",
+        "2": "дня",
+        "5": "дней"
+      },
+      "months": {
+        "1": "месяц",
+        "2": "месяца",
+        "5": "месяцев"
+      },
+      "years": {
+        "1": "год",
+        "2": "года",
+        "5": "лет"
+      }
+    }
+  },
+  "payment_status": {
+    "select_payment_service": "Выберите способ оплаты",
+    "external_page": "Вас перенаправит на внешнюю страницу оплаты",
+    "title_success": "Оплата успешна",
+    "title_success_ton": "Платёж успешно инициирован",
+    "title_failed": "Оплата не прошла!",
+    "text_success": "Вы успешно приобрели курс\n [course name]",
+    "text_success_ton": "Как только он будет подтверждён, вы получите доступ к курсу [course name].",
+    "text_failed": "Похоже, ваша транзакция не прошла. Не волнуйтесь, средства не были списаны.",
+    "button_text_success": "Вернуться на Главную страницу",
+    "button_text_failed": "Попробовать еще раз",
+    "button_start_learning": "Начать обучение"
+  },
+  "incorrect_page": {
+    "title": "Вы перешли по неправильной ссылке",
+    "text": "Обратитесь за помощью к своему учителю"
+  },
+  "author": {
+    "greetings": "Об авторе",
+    "terms_of_use": "Условия использования",
+    "default_text": "Автор курсов еще не добавил информации о себе. Его краткая биография и ссылки на социальные сети появятся здесь очень скоро."
+  },
+  "favourites": {
+    "title": "Избранное",
+    "emptyText": "Кажется, вы ещё не добавили ни одного урока в Избранное"
+  },
+  "homeworks": {
+    "emptyText": "Вы еще не выполнили <br>ни одного задания",
+    "addText": "Начните учиться уже сегодня",
+    "yourReply": "Ваш ответ"
+  },
+  "lesson": {
+    "compressing_error": "Видео сейчас недоступно.<br>Загляните позже"
+  },
+  "lessonTabs": {
+    "content": "Контент",
+    "materials": "Материалы",
+    "homework": "Домашка"
+  },
+  "support": {
+    "title": "Есть вопросы?<br>Напишите нам в Telegram",
+    "empty_link": "Похоже, Ваш преподаватель не добавил <br> ссылку для поддержки"
+  },
+  "course": {
+    "dividerText": "Закончи предыдущий урок, чтобы продолжить"
+  },
+  "calendar": {
+    "nearestEvents": "Ближайшие ивенты",
+    "calendar": "Календарь"
+  },
+  "quiz": {
+    "chooseOneAnswer": "Выберите один правильный ответ",
+    "chooseSeveralAnswer": "Выберите несколько правильных ответов",
+    "yourResult": "Твой результат",
+    "correctAnswers": "Правильные ответы",
+    "wrongAnswers": "Неправильные ответы"
+  },
+  "profile": {
+    "title": "Мой профиль",
+    "menu": {
+      "language": {
+        "title": "Язык",
+        "title_inside": "Язык"
+      },
+      "billing_history": {
+        "title": "История платежей",
+        "title_inside": "История платежей",
+        "empty_state": "Транзакций пока нет",
+        "empty_state_text": "Загляните позже, чтобы посмотреть историю платежей"
+      },
+      "edit_profile": {
+        "title": "Редактировать профиль",
+        "set_profile_photo": "Установить фото профиля",
+        "name": "Имя",
+        "name_placeholder": "Введите ваше имя",
+        "gallery": "Галерея"
+      }
+    },
+    "billing_history": {
+      "completed": "Успешно",
+      "failed": "Неудача",
+      "pending": "В ожидании"
+    }
+  },
+  "toast_notifications": {
+    "changes_saved": "Изменения сохранены",
+    "failed_get_mini_app": "Не удается получить название мини-приложения",
+    "image_size_too_large": "Слишком большое изображение",
+    "something_went_wrong": "Что-то пошло не так",
+    "not_enough_money": "Недостаточно средств. Пожалуйста, пополните свой кошелек"
+  }
+}

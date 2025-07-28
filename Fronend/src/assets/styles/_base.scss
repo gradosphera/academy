@@ -1,0 +1,125 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+p,
+span,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  user-select: none;
+}
+
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: clip;
+  overflow-y: hidden;
+  font-style: normal;
+  font-family: "Manrope", sans-serif;
+}
+
+button,
+input,
+optgroup,
+select,
+textarea {
+  font: inherit;
+  margin: 0;
+}
+
+button,
+input {
+  overflow: visible;
+  border: none;
+  outline: none;
+}
+
+button,
+select {
+  text-transform: none;
+  cursor: pointer;
+}
+
+* {
+  &:focus {
+    outline: none !important;
+  }
+}
+
+button,
+[type="button"],
+[type="reset"],
+[type="submit"] {
+  -webkit-appearance: button;
+  -webkit-tap-highlight-color: transparent;
+  font-family: "Inter Tight", sans-serif;
+
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  border-style: none;
+  padding: 0;
+}
+
+button:-moz-focusring,
+[type="button"]:-moz-focusring,
+[type="reset"]:-moz-focusring,
+[type="submit"]:-moz-focusring {
+  outline: 1px dotted ButtonText;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+ul,
+ol {
+  list-style: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar-track {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  display: none;
+}
+
+.loaderMedia {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  box-sizing: border-box;
+  animation: loader-rotation 4s linear infinite;
+}
+
+@keyframes loader-rotation {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

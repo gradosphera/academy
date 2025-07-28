@@ -1,0 +1,42 @@
+{
+  "name": "my-vue-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@gtm-support/vue-gtm": "^3.1.0",
+    "@mux/mux-player": "^3.4.0",
+    "@tato30/vue-pdf": "^1.11.3",
+    "@ton/core": "^0.61.0",
+    "@ton/ton": "^15.3.0",
+    "@tonconnect/ui": "^2.1.0",
+    "@vueuse/components": "^13.0.0",
+    "@vueuse/core": "^11.2.0",
+    "axios": "^1.7.7",
+    "js-cookie": "^3.0.5",
+    "lodash": "^4.17.21",
+    "pdfjs-dist": "^5.2.133",
+    "pinia": "^2.2.2",
+    "rive-js": "^0.7.33",
+    "swiper": "^11.1.12",
+    "vue": "^3.4.37",
+    "vue-cal": "^4.10.0",
+    "vue-gtag": "^3.5.1",
+    "vue-i18n": "^10.0.5",
+    "vue-picture-cropper": "^0.7.0",
+    "vue-router": "^4.4.3"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.2",
+    "sass": "^1.78.0",
+    "sass-loader": "^16.0.1",
+    "vite": "^6.3.5",
+    "vite-plugin-mkcert": "^1.17.8",
+    "vite-plugin-node-polyfills": "^0.24.0"
+  }
+}

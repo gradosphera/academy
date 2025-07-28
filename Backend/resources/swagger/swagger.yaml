@@ -1,0 +1,3368 @@
+openapi: 3.0.3
+info:
+  title: Academy API
+tags:
+  - name: Auth
+    description: Authentication for users.
+  - name: User
+    description: User related methods accessed using JWT token.
+  - name: Mod
+    description: Mod related methods accessed using JWT token.
+  - name: App
+    description: Mini-App related methods.
+  - name: Product
+    description: Product related methods.
+  - name: Lesson
+    description: Lesson related methods.
+  - name: Material
+    description: Material related methods.
+  - name: Product Level
+    description: Product Level related methods.
+  - name: Payment
+    description: Payment related methods.
+paths:
+  /v1/auth/admin/signin:
+    post:
+      tags:
+        - Auth
+      summary: Authenticate admin to get JWT tokens.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInAdminRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignInResponse"
+        "400":
+          description: Invalid input
+  /v1/auth/mod/signin:
+    post:
+      tags:
+        - Auth
+      summary: Allows moderator to sign-in using either invite or mini-app id.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInModRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignInModResponse"
+        "400":
+          description: Invalid input
+  /v1/auth/mod/list:
+    post:
+      tags:
+        - Auth
+      summary: Lists available mini-apps for moderator.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListMiniAppsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_apps:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/MiniApp"
+        "400":
+          description: Invalid input
+  /v1/auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: Authenticate user to get JWT tokens.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignInResponse"
+        "400":
+          description: Invalid input
+  /v1/auth/signin/invite:
+    post:
+      tags:
+        - Auth
+      summary: Authenticate user with invite to get JWT tokens and unlocked product.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignInWithInviteRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SignInWithInviteResponse"
+        "400":
+          description: Invalid input
+  /v1/auth/refresh:
+    post:
+      tags:
+        - Auth
+      summary: Refresh JWT tokens.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  jwt_info:
+                    $ref: "#/components/schemas/JWTInfo"
+        "400":
+          description: Invalid input
+  /v1/user/me:
+    get:
+      tags:
+        - User
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/edit:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                user:
+                  $ref: "#/components/schemas/EditUserRequest"
+                avatar:
+                  type: string
+                  format: binary
+            encoding:
+              avatar:
+                contentType: image/png, image/jpeg
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: "#/components/schemas/User"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/homeworks:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterUserHomeworkRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  homework:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Progress"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/{id}/stats:
+    get:
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  stats:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/StudentProductStats"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/{id}/ban:
+    post:
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BanUserRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/{id}/unban:
+    post:
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UnbanUserRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/banlist:
+    post:
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ListBannedUserRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/User"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/{id}/levelup:
+    post:
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LevelUpUserRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/user/{id}/levels:
+    post:
+      tags:
+        - User
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UserLevelsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  levels:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/StudentProductLevels"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/mod/invite:
+    post:
+      tags:
+        - Mod
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateModInviteRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invite:
+                    type: string
+                    format: uuid
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/mod/invite/{id}:
+    delete:
+      tags:
+        - Mod
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/mod/invite/{id}/edit:
+    post:
+      tags:
+        - Mod
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditModInviteRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/mod/invites:
+    post:
+      tags:
+        - Mod
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterModInvitesRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invites:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ModInvite"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/mod/permissions:
+    get:
+      tags:
+        - Mod
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  permissions:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Permission"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app:
+    post:
+      tags:
+        - App
+      summary: Create a new mini app.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMiniAppRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_app:
+                    $ref: "#/components/schemas/MiniApp"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+    get:
+      tags:
+        - App
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_app:
+                    $ref: "#/components/schemas/MiniApp"
+                  accesses:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductAccess"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+    delete:
+      tags:
+        - App
+      responses:
+        "200":
+          description: Successful operation
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/edit/account:
+    post:
+      tags:
+        - App
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                account:
+                  $ref: "#/components/schemas/EditMiniAppAccountRequest"
+                avatar:
+                  type: string
+                  format: binary
+            encoding:
+              avatar:
+                contentType: image/png, image/jpeg
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_app:
+                    $ref: "#/components/schemas/MiniApp"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/edit/branding:
+    post:
+      tags:
+        - App
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                branding:
+                  $ref: "#/components/schemas/EditMiniAppBrandingRequest"
+                logo:
+                  type: string
+                  format: binary
+            encoding:
+              logo:
+                contentType: image/png, image/jpeg
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_app:
+                    $ref: "#/components/schemas/MiniApp"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/edit/analytics:
+    post:
+      tags:
+        - App
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditMiniAppAnalyticsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_app:
+                    $ref: "#/components/schemas/MiniApp"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/archive:
+    get:
+      tags:
+        - App
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/unarchive:
+    get:
+      tags:
+        - App
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/slides:
+    post:
+      tags:
+        - App
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                slides:
+                  $ref: "#/components/schemas/EditSlidesRequest"
+                new_slide:
+                  type: string
+                  format: binary
+            encoding:
+              new_slide:
+                contentType: image/png, image/jpeg
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  mini_app:
+                    $ref: "#/components/schemas/MiniApp"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/analytics:
+    post:
+      tags:
+        - App
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AnalyticsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analytics:
+                    $ref: "#/components/schemas/Analytics"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/info:
+    get:
+      tags:
+        - App
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  info:
+                    $ref: "#/components/schemas/MiniAppInfo"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/payment_metadata:
+    get:
+      tags:
+        - App
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment_metadata:
+                    type: object
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product:
+    post:
+      tags:
+        - Product
+      summary: Create a new product.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                product:
+                  $ref: "#/components/schemas/CreateProductRequest"
+                cover:
+                  type: string
+                  format: binary
+            encoding:
+              cover:
+                contentType: image/png, image/jpeg
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}:
+    get:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+                  reviews:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Review"
+                  unlocked_lessons:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/UnlockedLessons"
+                  progress:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Progress"
+                  access:
+                    $ref: "#/components/schemas/ProductAccess"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+    delete:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/edit:
+    post:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                product:
+                  $ref: "#/components/schemas/EditProductRequest"
+                cover:
+                  type: string
+                  format: binary
+            encoding:
+              cover:
+                contentType: image/png, image/jpeg
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/invites:
+    post:
+      tags:
+        - Product
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterProductLevelInvitesRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invites:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/ProductLevelInvite"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/reorder/lessons:
+    post:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderProductLessonsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/reorder/levels:
+    post:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReorderProductLevelsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product:
+                    $ref: "#/components/schemas/Product"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/homeworks:
+    post:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FilterProductHomeworkRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  homework:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Progress"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/feedback:
+    get:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  feedback:
+                    $ref: "#/components/schemas/ProductFeedback"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/students:
+    get:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
+        - in: query
+          name: offset
+          schema:
+            type: integer
+        - in: query
+          name: username_search
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  students:
+                    $ref: "#/components/schemas/ProductStudents"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/product/{id}/students/export/excel:
+    post:
+      tags:
+        - Product
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportProductStudentsRequest"
+        required: true
+      responses:
+        "200":
+          description: Path to excel-file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_path:
+                    type: string
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/lesson:
+    post:
+      tags:
+        - Lesson
+      summary: Create a new Lesson.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateLessonRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lesson:
+                    $ref: "#/components/schemas/Lesson"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/lesson/{id}:
+    get:
+      tags:
+        - Lesson
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lesson:
+                    $ref: "#/components/schemas/Lesson"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+    delete:
+      tags:
+        - Lesson
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/lesson/{id}/edit:
+    post:
+      tags:
+        - Lesson
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditLessonRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  lesson:
+                    $ref: "#/components/schemas/Lesson"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/lesson/{id}/submit:
+    post:
+      tags:
+        - Lesson
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                submit:
+                  $ref: "#/components/schemas/LessonSubmitionRequest"
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LessonSubmitionResponse"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/lesson/{id}/submit/question:
+    post:
+      tags:
+        - Lesson
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/QuestionSubmitionRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionSubmitionResponce"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/lesson/{id}/review:
+    post:
+      tags:
+        - Lesson
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/homework/feedback:
+    post:
+      tags:
+        - Lesson
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/FeedbackHomeworkRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/homework:
+    post:
+      tags:
+        - Material
+      summary: Create a new homework.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateHomeworkRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  material:
+                    $ref: "#/components/schemas/Material"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/homework/{id}/edit:
+    post:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditHomeworkRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  material:
+                    $ref: "#/components/schemas/Material"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material:
+    post:
+      tags:
+        - Material
+      summary: Create a new material.
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                material:
+                  $ref: "#/components/schemas/CreateMaterialRequest"
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  material:
+                    $ref: "#/components/schemas/Material"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material/{id}:
+    delete:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material/{id}/edit:
+    post:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                material:
+                  $ref: "#/components/schemas/EditMaterialRequest"
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  material:
+                    $ref: "#/components/schemas/Material"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material/{id}/token:
+    get:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  playback_id:
+                    type: string
+                  token:
+                    type: string
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material/{id}/chunk/{chunk_index}:
+    post:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+        - in: path
+          name: chunk_index
+          schema:
+            type: number
+          required: true
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                chunk:
+                  $ref: "#/components/schemas/CreateChunkRequest"
+                file:
+                  type: string
+                  format: binary
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  size:
+                    type: number
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material/{id}/chunks/submit:
+    post:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SubmitChunksRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  material:
+                    $ref: "#/components/schemas/Material"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/material/{id}/chunks/clear:
+    post:
+      tags:
+        - Material
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/level:
+    post:
+      tags:
+        - Product Level
+      summary: Create a new product level.
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductLevelRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product_level:
+                    $ref: "#/components/schemas/ProductLevel"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/level/{id}/edit:
+    post:
+      tags:
+        - Product Level
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EditProductLevelRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  product_level:
+                    $ref: "#/components/schemas/ProductLevel"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/level/{id}/invite:
+    get:
+      tags:
+        - Product Level
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  invite:
+                    $ref: "#/components/schemas/ProductLevelInvite"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/level/{id}:
+    delete:
+      tags:
+        - Product Level
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/level/{id}/buy/ton:
+    get:
+      tags:
+        - Product Level
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment:
+                    $ref: "#/components/schemas/Payment"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/level/{id}/buy/wayforpay:
+    get:
+      tags:
+        - Product Level
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment:
+                    $ref: "#/components/schemas/Payment"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/payment/{id}:
+    get:
+      tags:
+        - Payment
+      parameters:
+        - in: path
+          name: id
+          schema:
+            type: string
+            format: uuid
+          required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payment:
+                    $ref: "#/components/schemas/Payment"
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/payments:
+    post:
+      tags:
+        - Payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetPaymentsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Payment"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/students/payments:
+    post:
+      tags:
+        - Payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/GetStudentsPaymentsRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  payments:
+                    type: array
+                    items:
+                      $ref: "#/components/schemas/Payment"
+                  total:
+                    type: integer
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+  /v1/app/students/payments/export/excel:
+    post:
+      tags:
+        - Payment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExportStudentsPaymentsRequest"
+        required: true
+      responses:
+        "200":
+          description: Path to excel-file
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  file_path:
+                    type: string
+        "400":
+          description: Invalid input
+        "401":
+          description: Unauthorized
+      security:
+        - jwt_auth: []
+components:
+  schemas:
+    Interval:
+      type: object
+      properties:
+        years:
+          type: number
+        months:
+          type: number
+        days:
+          type: number
+        hours:
+          type: number
+        minutes:
+          type: number
+        seconds:
+          type: number
+        microseconds:
+          type: number
+    JWTInfo:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+        access_token:
+          type: string
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mini_app_id:
+          type: string
+          format: uuid
+        is_owner:
+          type: boolean
+        telegram_id:
+          type: number
+          format: int64
+        telegram_username:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        language:
+          type: string
+        avatar:
+          type: string
+          format: uri
+        avatar_size:
+          type: integer
+        color_theme:
+          type: object
+        is_active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+    MiniApp:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        bot_id:
+          type: number
+          format: int64
+        name:
+          type: string
+        logo:
+          type: string
+          format: uri
+        logo_size:
+          type: integer
+        teacher_bio:
+          type: string
+        teacher_links:
+          type: array
+          items:
+            type: string
+            format: uri
+        teacher_avatar:
+          type: string
+          format: uri
+        teacher_avatar_size:
+          type: integer
+        color_theme:
+          type: object
+        language:
+          type: string
+        url:
+          type: string
+          format: uri
+        active_payment_services:
+          type: array
+          items:
+            type: string
+            enum: ["ton", "wayforpay"]
+        support:
+          type: string
+          format: uri
+        analytics:
+          type: object
+        is_active:
+          type: boolean
+        deleted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        owner:
+          type: object
+        slides:
+          type: array
+          items:
+            type: object
+        tos:
+          type: array
+          items:
+            type: object
+        privacy_policy:
+          type: array
+          items:
+            type: object
+        products:
+          type: array
+          items:
+            type: object
+    Product:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mini_app_id:
+          type: string
+          format: uuid
+        index:
+          type: number
+          format: int64
+        title:
+          type: string
+        logo:
+          type: string
+          format: uri
+        cover:
+          type: string
+          format: uri
+        description:
+          type: string
+        content_type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        lesson_access:
+          type: string
+          enum: ["unlocked", "sequential", "scheduled"]
+        release_date:
+          type: string
+          format: date-time
+        access_time:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        lessons:
+          type: array
+          items:
+            type: object
+        levels:
+          type: array
+          items:
+            type: object
+    Lesson:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        index:
+          type: number
+          format: int64
+        module_name:
+          type: string
+        content_type:
+          type: string
+          enum: ["video", "audio", "text", "event"]
+        title:
+          type: string
+        description:
+          type: string
+        release_date:
+          type: string
+          format: date-time
+        access_time:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        materials:
+          type: array
+          items:
+            $ref: "#/components/schemas/Material"
+    Material:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mini_app_id:
+          type: string
+          format: uuid
+        lesson_id:
+          type: string
+          format: uuid
+        product_level_id:
+          type: string
+          format: uuid
+        index:
+          type: number
+          format: int64
+        category:
+          type: string
+          enum:
+            - "lesson_content"
+            - "lesson_cover"
+            - "materials"
+            - "homework"
+            - "slides"
+            - "tos"
+            - "privacy_policy"
+            - "bonus"
+        content_type:
+          type: string
+          enum:
+            [
+              "circle_video",
+              "video",
+              "audio",
+              "picture",
+              "text",
+              "quiz",
+              "open_question",
+            ]
+        title:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+        original_filename:
+          type: string
+        filename:
+          type: string
+        size:
+          type: number
+          format: int64
+        metadata:
+          type: object
+        status:
+          type: string
+          enum: ["ready", "pending_compressing", "pending_move_to_mux"]
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    ProductLevel:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        index:
+          type: number
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        full_price:
+          type: string
+        currency:
+          type: string
+        duration:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProductLevelLesson"
+    ProductLevelLesson:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        lesson_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+    Plan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        full_price:
+          type: string
+        currency:
+          type: string
+        features:
+          type: object
+        duration:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        plan_id:
+          type: string
+          format: uuid
+        product_level_id:
+          type: string
+          format: uuid
+        access_start:
+          type: string
+          format: date-time
+        access_duration:
+          $ref: "#/components/schemas/Interval"
+        amount:
+          type: string
+        currency:
+          type: string
+        amount_usd:
+          type: string
+        status:
+          type: string
+          enum: ["pending", "completed", "failed", "pending_refund", "refunded"]
+        url:
+          type: string
+          format: uri
+        comment:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        user:
+          type: object
+          # $ref: '#/components/schemas/User'
+        plan:
+          type: object
+          # $ref: '#/components/schemas/Plan'
+        product_level:
+          type: object
+          # $ref: '#/components/schemas/ProductLevel'
+    Progress:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        lesson_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: ["pending", "failed", "accepted"]
+        data:
+          type: object
+        score:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    UnlockedLessons:
+      type: object
+      properties:
+        lesson_id:
+          type: string
+          format: uuid
+        expired_at:
+          type: string
+          format: date-time
+    ModInvite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mini_app_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        user:
+          type: object
+        permissions:
+          type: array
+          items:
+            type: object
+    ProductLevelInvite:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        product_level_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        user:
+          type: object
+    ProductAccess:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        product_id:
+          type: string
+          format: uuid
+        invite_id:
+          type: string
+          format: uuid
+        deleted_reason:
+          type: string
+        deleted_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        lesson_id:
+          type: string
+          format: uuid
+        score:
+          type: integer
+        text:
+          type: string
+        updated_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+    Analytics:
+      type: object
+      properties:
+        new_students:
+          type: integer
+        total_students:
+          type: integer
+        money_earned:
+          type: string
+        total_money_earned:
+          type: string
+        products:
+          type: array
+          items:
+            type: object
+    MiniAppInfo:
+      type: object
+      properties:
+        storage_size:
+          type: integer
+        total_products:
+          type: integer
+        total_students:
+          type: integer
+        max_storage_size:
+          type: integer
+        max_total_products:
+          type: integer
+        max_total_students:
+          type: integer
+    ProductFeedback:
+      type: object
+      properties:
+        avg_score:
+          type: integer
+        total_reviews:
+          type: integer
+        lessons:
+          type: array
+          items:
+            type: object
+            properties:
+              lesson_id:
+                type: string
+                format: uuid
+              module_name:
+                type: string
+              content_type:
+                type: string
+                enum: ["video", "audio", "text", "event"]
+              title:
+                type: string
+              avg_score:
+                type: integer
+              total_reviews:
+                type: integer
+    ProductStudents:
+      type: object
+      properties:
+        avg_progress:
+          type: integer
+        total_lessons:
+          type: integer
+        students_progress:
+          type: array
+          items:
+            type: object
+            properties:
+              user_id:
+                type: string
+                format: uuid
+              telegram_id:
+                type: integer
+              telegram_username:
+                type: string
+              avatar:
+                type: string
+                format: uri
+              joined_at:
+                type: string
+                format: date-time
+              progress:
+                type: integer
+    StudentProductStats:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        cover:
+          type: string
+          format: uri
+        content_type:
+          type: string
+        joined_at:
+          type: string
+          format: date-time
+        product_access_deleted_reason:
+          type: string
+        product_access_deleted_at:
+          type: string
+          format: date-time
+        lesson_stats:
+          type: object
+          properties:
+            lesson_id:
+              type: string
+              format: uuid
+            module_name:
+              type: string
+            content_type:
+              type: string
+              enum: ["video", "audio", "text", "event"]
+            title:
+              type: string
+            progress_status:
+              type: string
+              enum: ["pending", "failed", "accepted"]
+            score:
+              type: integer
+            review_score:
+              type: integer
+            review_text:
+              type: string
+    StudentProductLevels:
+      type: object
+      properties:
+        payment_id:
+          type: string
+          format: uuid
+        product_level_id:
+          type: string
+          format: uuid
+        product_level_name:
+          type: string
+        product_level_description:
+          type: string
+        paid_price:
+          type: string
+        paid_currency:
+          type: string
+        ends_at:
+          type: string
+          format: date-time
+    Permission:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+    SignInAdminRequest:
+      type: object
+      properties:
+        init_data:
+          type: string
+    SignInModRequest:
+      type: object
+      properties:
+        mini_app_id:
+          type: string
+          format: uuid
+        init_data:
+          type: string
+        invite_id:
+          type: string
+          format: uuid
+    SignInRequest:
+      type: object
+      properties:
+        mini_app_name:
+          type: string
+        init_data:
+          type: string
+    SignInResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        jwt_info:
+          $ref: "#/components/schemas/JWTInfo"
+    SignInWithInviteRequest:
+      type: object
+      properties:
+        mini_app_name:
+          type: string
+        init_data:
+          type: string
+        invite_id:
+          type: string
+          format: uuid
+    SignInWithInviteResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        jwt_info:
+          $ref: "#/components/schemas/JWTInfo"
+        product_id:
+          type: string
+          format: uuid
+        product_level_id:
+          type: string
+          format: uuid
+    SignInModResponse:
+      type: object
+      properties:
+        user:
+          $ref: "#/components/schemas/User"
+        jwt_info:
+          $ref: "#/components/schemas/JWTInfo"
+        permissions:
+          type: array
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+    RefreshRequest:
+      type: object
+      properties:
+        refresh_token:
+          type: string
+    ListMiniAppsRequest:
+      type: object
+      properties:
+        init_data:
+          type: string
+    EditUserRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        language:
+          type: string
+        color_theme:
+          type: object
+        delete_avatar:
+          type: boolean
+    CreateMiniAppRequest:
+      type: object
+      properties:
+        bot_token:
+          type: string
+        init_data:
+          type: string
+        name:
+          type: string
+    EditMiniAppAccountRequest:
+      type: object
+      properties:
+        bot_token:
+          type: string
+        mini_app_name:
+          type: string
+        active_payment_services:
+          type: array
+          items:
+            type: string
+            enum: ["ton", "wayforpay"]
+        payment_metadata_ton:
+          type: object
+          properties:
+            ton_address:
+              type: string
+        payment_metadata_wayforpay:
+          type: object
+          properties:
+            wayforpay_login:
+              type: string
+            wayforpay_secret_key:
+              type: string
+            wayforpay_domain_name:
+              type: string
+        mini_app_url:
+          type: string
+          format: uri
+        mini_app_is_active:
+          type: boolean
+        teacher_first_name:
+          type: string
+        teacher_last_name:
+          type: string
+        teacher_language:
+          type: string
+        teacher_bio:
+          type: string
+        teacher_links:
+          type: array
+          items:
+            type: string
+            format: uri
+        teacher_color_theme:
+          type: object
+        teacher_delete_avatar:
+          type: boolean
+    EditMiniAppBrandingRequest:
+      type: object
+      properties:
+        color_theme:
+          type: object
+          properties:
+            accent_color:
+              type: string
+        language:
+          type: string
+        support:
+          type: string
+          format: uri
+        delete_logo:
+          type: boolean
+    EditMiniAppAnalyticsRequest:
+      type: object
+      properties:
+        facebook_pixel:
+          type: string
+        g_tag:
+          type: string
+        google_analytics:
+          type: string
+    EditSlidesRequest:
+      type: object
+      properties:
+        slides_order:
+          type: array
+          items:
+            type: string
+            format: uuid
+        new_slide_index:
+          type: number
+        new_slide_title:
+          type: string
+        new_slide_description:
+          type: string
+        new_slide_url:
+          type: string
+          format: uri
+    CreateProductRequest:
+      type: object
+      properties:
+        index:
+          type: number
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        content_type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        lesson_access:
+          type: string
+          enum: ["unlocked", "sequential", "scheduled"]
+        release_date:
+          type: string
+          format: date-time
+        access_time:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+    EditProductRequest:
+      type: object
+      properties:
+        index:
+          type: number
+          format: int64
+        title:
+          type: string
+        description:
+          type: string
+        content_type:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        lesson_access:
+          type: string
+          enum: ["unlocked", "sequential", "scheduled"]
+        release_date:
+          type: string
+          format: date-time
+        access_time:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+        delete_cover:
+          type: boolean
+    ReorderProductLessonsRequest:
+      type: object
+      properties:
+        modules:
+          type: array
+          items:
+            type: object
+            properties:
+              module_name:
+                type: string
+              lesson_ids:
+                type: array
+                items:
+                  type: string
+                  format: uuid
+        lessons_to_delete:
+          type: array
+          items:
+            type: string
+            format: uuid
+    ReorderProductLevelsRequest:
+      type: object
+      properties:
+        product_levels:
+          type: array
+          items:
+            type: string
+            format: uuid
+    FilterUserHomeworkRequest:
+      type: object
+      properties:
+        lesson_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+        status:
+          type: array
+          items:
+            type: string
+            enum: ["pending", "failed", "accepted"]
+        limit:
+          type: integer
+        offset:
+          type: integer
+    FilterProductHomeworkRequest:
+      type: object
+      properties:
+        user_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+        lesson_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+        limit:
+          type: integer
+        offset:
+          type: integer
+    CreateLessonRequest:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        module_name:
+          type: string
+        content_type:
+          type: string
+          enum: ["video", "audio", "text", "event"]
+        title:
+          type: string
+        description:
+          type: string
+        release_date:
+          type: string
+          format: date-time
+        access_time:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+        index:
+          type: number
+          format: int64
+        product_level_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+    EditLessonRequest:
+      type: object
+      properties:
+        module_name:
+          type: string
+        content_type:
+          type: string
+          enum: ["video", "audio", "text", "event"]
+        title:
+          type: string
+        description:
+          type: string
+        release_date:
+          type: string
+          format: date-time
+        access_time:
+          $ref: "#/components/schemas/Interval"
+        is_active:
+          type: boolean
+    CreateHomeworkRequest:
+      type: object
+      properties:
+        lesson_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        homework_type:
+          type: string
+          enum: ["quiz", "open_question"]
+        quiz_metadata:
+          type: object
+          properties:
+            questions:
+              type: array
+              items:
+                type: object
+                properties:
+                  answer_type:
+                    type: string
+                    enum: ["single_answer", "multi_answer", "empty"]
+                  question:
+                    type: string
+                  options:
+                    type: array
+                    items:
+                      type: string
+        quiz_answers:
+          type: object
+          properties:
+            answers:
+              type: array
+              items:
+                type: array
+                items:
+                  type: boolean
+        open_question_metadata:
+          type: object
+          properties:
+            question:
+              type: string
+            allow_file_answer:
+              type: boolean
+    EditHomeworkRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        homework_type:
+          type: string
+          enum: ["quiz", "open_question"]
+        quiz_metadata:
+          type: object
+          properties:
+            questions:
+              type: array
+              items:
+                type: object
+                properties:
+                  answer_type:
+                    type: string
+                    enum: ["single_answer", "multi_answer", "empty"]
+                  question:
+                    type: string
+                  options:
+                    type: array
+                    items:
+                      type: string
+        quiz_answers:
+          type: object
+          properties:
+            answers:
+              type: array
+              items:
+                type: array
+                items:
+                  type: boolean
+        open_question_metadata:
+          type: object
+          properties:
+            question:
+              type: string
+            allow_file_answer:
+              type: boolean
+    CreateMaterialRequest:
+      type: object
+      properties:
+        mini_app_id:
+          type: string
+          format: uuid
+        lesson_id:
+          type: string
+          format: uuid
+        product_level_id:
+          type: string
+          format: uuid
+        index:
+          type: number
+          format: int64
+        category:
+          type: string
+          enum:
+            - "lesson_content"
+            - "lesson_cover"
+            - "materials"
+            - "tos"
+            - "privacy_policy"
+            - "bonus"
+        content_type:
+          type: string
+          enum: ["circle_video", "video", "audio", "picture", "text"]
+        title:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+    EditMaterialRequest:
+      type: object
+      properties:
+        index:
+          type: number
+          format: int64
+        content_type:
+          type: string
+          enum: ["circle_video", "video", "audio", "picture", "text"]
+        title:
+          type: string
+        description:
+          type: string
+        original_filename:
+          type: string
+        url:
+          type: string
+    SubmitChunksRequest:
+      type: object
+      properties:
+        original_filename:
+          type: string
+        status:
+          type: string
+          enum: ["ready", "pending_compressing", "pending_move_to_mux"]
+    CreateProductLevelRequest:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        full_price:
+          type: string
+        currency:
+          type: string
+        is_active:
+          type: boolean
+        lesson_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    EditProductLevelRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        price:
+          type: string
+        full_price:
+          type: string
+        currency:
+          type: string
+        is_active:
+          type: boolean
+        add_lesson_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+        remove_lesson_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+    GetPaymentsRequest:
+      type: object
+      properties:
+        status:
+          type: array
+          items:
+            type: string
+            enum:
+              ["pending", "completed", "failed", "pending_refund", "refunded"]
+        limit:
+          type: integer
+        offset:
+          type: integer
+    LessonSubmitionRequest:
+      type: object
+      properties:
+        quiz:
+          type: array
+          items:
+            type: array
+            items:
+              type: boolean
+        text:
+          type: string
+        links:
+          type: array
+          items:
+            type: string
+    LessonSubmitionResponse:
+      type: object
+      properties:
+        lesson_result:
+          $ref: "#/components/schemas/Progress"
+    QuestionSubmitionRequest:
+      type: object
+      properties:
+        question_index:
+          type: number
+        question_answer:
+          type: array
+          items:
+            type: boolean
+    QuestionSubmitionResponce:
+      type: object
+      properties:
+        question_result:
+          type: object
+          properties:
+            correct_answers:
+              type: array
+              items:
+                type: boolean
+            user_answers:
+              type: array
+              items:
+                type: boolean
+    FeedbackHomeworkRequest:
+      type: object
+      properties:
+        lesson_id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        score:
+          type: integer
+        feedback:
+          type: string
+        new_status:
+          type: string
+          enum: ["pending", "failed", "accepted"]
+    ReviewRequest:
+      type: object
+      properties:
+        score:
+          type: integer
+        text:
+          type: string
+    AnalyticsRequest:
+      type: object
+      properties:
+        time_period:
+          $ref: "#/components/schemas/Interval"
+    ExportProductStudentsRequest:
+      type: object
+      properties:
+        date_from:
+          type: string
+        date_to:
+          type: string
+    BanUserRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+        product_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+    UnbanUserRequest:
+      type: object
+      properties:
+        product_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+    ListBannedUserRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+    LevelUpUserRequest:
+      type: object
+      properties:
+        product_level_id:
+          type: array
+          items:
+            type: string
+            format: uuid
+    UserLevelsRequest:
+      type: object
+      properties:
+        product_id:
+          type: string
+          format: uuid
+    FilterModInvitesRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+    FilterProductLevelInvitesRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+    CreateModInviteRequest:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+    EditModInviteRequest:
+      type: object
+      properties:
+        permissions:
+          type: array
+          items:
+            type: string
+    CreateChunkRequest:
+      type: object
+      properties:
+        hashsum:
+          type: string
+    GetStudentsPaymentsRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+        offset:
+          type: integer
+    ExportStudentsPaymentsRequest:
+      type: object
+      properties:
+        date_from:
+          type: string
+        date_to:
+          type: string
+  securitySchemes:
+    jwt_auth:
+      type: apiKey
+      in: header
+      name: Authorization

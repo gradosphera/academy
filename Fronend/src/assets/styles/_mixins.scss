@@ -1,0 +1,85 @@
+@mixin fz-10 {
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: -0.4px;
+}
+
+@mixin fz-12 {
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.48px;
+}
+
+@mixin fz-14 {
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.56px;
+}
+
+@mixin fz-16-500 {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.64px;
+}
+
+@mixin fz-16-400 {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: -0.64px;
+}
+
+@mixin fz-17 {
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 125%;
+}
+
+@mixin fz-20 {
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.8px;
+}
+
+@mixin fz-22 {
+  font-size: 22px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.22px;
+}
+
+@mixin fz-24 {
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%;
+  letter-spacing: -0.96px;
+}
+
+@mixin fz-32 {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 100%; /* 32px */
+  letter-spacing: -1.28px;
+}
+
+@mixin fz-64 {
+  font-size: 64px;
+  font-style: normal;
+  line-height: 72px;
+  letter-spacing: -0.64px;
+}

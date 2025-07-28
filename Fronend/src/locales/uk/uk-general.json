@@ -1,0 +1,174 @@
+{
+  "buttons": {
+    "next": "Далі",
+    "previous": "Назад",
+    "close": "Закрити",
+    "start": "Розпочати",
+    "nextLesson": "До наступного уроку",
+    "moreText": "Детальніше",
+    "lessText": "Приховати",
+    "sendSupport": "Написати",
+    "joinStream": "Доєднатись",
+    "openStreamLesson": "Дізнатися більше",
+    "joinStreamNow": "Доєднатись зараз",
+    "repeatQuiz": "Пройти ще раз",
+    "delete": "Видалити",
+    "wrongQuizReply": "Неправильно!",
+    "correctQuizReply": "Правильно!",
+    "nextQuizQuestion": "До наступного",
+    "checkQuizReply": "Перевірити",
+    "finishQuiz": "Завершити",
+    "save": "Зберегти",
+    "try_again": "Спробувати ще раз",
+    "cancel": "Скасувати",
+    "select_photo": "Встановити",
+    "confirm": "Підтвердити",
+    "continue": "Продовжити",
+    "back": "Назад"
+  },
+  "incorrect_page": {
+    "title": "Ви перейшли за хибним посиланням",
+    "text": " Зверніться за допомогою до свого викладача"
+  },
+  "nav_bar": {
+    "favorites": "Обране",
+    "support": "Є питання?"
+  },
+  "main": {
+    "products": "Продукти",
+    "product_type": "курс",
+    "start_product": "Розпочати",
+    "product_empty_list_title": "Немає доступних курсів",
+    "product_empty_list": "Ваш викладач ще не опублікував жодного курсу. Перевірте пізніше!",
+    "product_view_disabled": "Доступ заборонено",
+    "access_removed": "Доступ видалено",
+    "lesson_scheduled": "Урок відкриється через:",
+    "failed_open_lesson": "Не вдалося завантажити урок",
+    "rate_the_lesson": "Оцініть урок",
+    "finish_previous_lesson": "Заверши попередній урок, щоб продовжити",
+    "lesson_schedule_left": {
+      "days": "дн.",
+      "hours": "год.",
+      "minutes": "хв."
+    },
+    "got_it": "Зрозуміло",
+    "ban_text": "Ваш доступ до курсу [product title] було анульовано",
+    "ban_text_span": "Якщо ви вважаєте, що це помилка, зверніться до свого викладача",
+    "ban_contact_support": "Зв’язатися з підтримкою",
+    "product_free": "Безкоштовно",
+    "tariff_get_access": "Довічний доступ",
+    "tariff_buy_now": "Купити зараз",
+    "tariff_access_to": "Доступ до",
+    "tariff_access_for": "Доступ на",
+    "tariff_all_lessons": "усіх уроків",
+    "tariff_part_lessons": "уроку(-ів)",
+    "tariff_bonus_content": "бонусного контенту",
+    "select_tariff": "Виберіть відповідний тариф",
+    "lesson_video_compressing": "Відео поки недоступне",
+    "symbols": "символів",
+    "tariff_period": {
+      "days": {
+        "1": "день",
+        "2": "дні",
+        "5": "днів"
+      },
+      "months": {
+        "1": "місяць",
+        "2": "місяці",
+        "5": "місяців"
+      },
+      "years": {
+        "1": "рік",
+        "2": "роки",
+        "5": "років"
+      }
+    }
+  },
+  "payment_status": {
+    "select_payment_service": "Оберіть спосіб оплати",
+    "external_page": "Вас перенаправить на сторонню сторінку оплати",
+    "title_success": "Оплата успішна",
+    "title_success_ton": "Платіж успішно ініційовано",
+    "title_failed": "Оплата не пройшла!",
+    "text_success": "Ви успішно придбали курс\n [course name]",
+    "text_success_ton": "Щойно його буде підтверджено, ви отримаєте доступ до курсу [course name].",
+    "text_failed": "Схоже, ваша транзакція не пройшла. Не хвилюйтеся, кошти не були списані.",
+    "button_text_success": "Повернутися на Головну сторінку",
+    "button_text_failed": "Спробувати ще раз",
+    "button_start_learning": "Розпочати навчання"
+  },
+  "author": {
+    "greetings": "Про автора",
+    "terms_of_use": "Умови використання",
+    "default_text": "Автор курсів ще не додав інформації про себе. Його коротка біографія та посилання на соціальні мережі з'являться тут дуже скоро."
+  },
+  "favourites": {
+    "title": "Обране",
+    "emptyText": "Схоже, ви ще не додали жодного уроку до Обраного"
+  },
+  "homeworks": {
+    "emptyText": "Ви ще не виконали <br>жодного завдання",
+    "addText": "Почніть навчатися вже сьогодні",
+    "yourReply": "Ваша відповідь"
+  },
+  "lesson": {
+    "compressing_error": "Відео зараз недоступне.<br>Перегляньте пізніше"
+  },
+  "lessonTabs": {
+    "content": "Контент",
+    "materials": "Матеріали",
+    "homework": "Домашка"
+  },
+  "support": {
+    "title": "Є питання? <br>Напишіть нам у Telegram",
+    "empty_link": "Схоже, ваш викладач не додав <br> посилання на підтримку"
+  },
+  "course": {
+    "dividerText": "Заверши попередній урок, щоб продовжити"
+  },
+  "calendar": {
+    "nearestEvents": "Найближчі івенти",
+    "calendar": "Календар"
+  },
+  "quiz": {
+    "chooseOneAnswer": "Оберіть одну правильну відповідь",
+    "chooseSeveralAnswer": "Оберіть декілька правильних відповідей",
+    "yourResult": "Твій результат",
+    "correctAnswers": "Правильні відповіді",
+    "wrongAnswers": "Неправильні відповіді"
+  },
+  "profile": {
+    "title": "Мій профіль",
+    "menu": {
+      "language": {
+        "title": "Мова",
+        "title_inside": "Мова"
+      },
+      "billing_history": {
+        "title": "Історія платежів",
+        "title_inside": "Історія платежів",
+        "empty_state": "Ще немає транзакцій",
+        "empty_state_text": "Поверніться пізніше, щоб переглянути історію платежів"
+      },
+      "edit_profile": {
+        "title": "Редагувати профіль",
+        "set_profile_photo": "Встановити фото профілю",
+        "name": "Ім'я",
+        "name_placeholder": "Введіть ваше ім'я",
+        "gallery": "Галерея"
+      }
+    },
+    "billing_history": {
+      "completed": "Успішно",
+      "failed": "Невдало",
+      "pending": "Очікується"
+    }
+  },
+  "toast_notifications": {
+    "changes_saved": "Зміни збережено",
+    "failed_get_mini_app": "Не вдається отримати назву міні-додатку",
+    "image_size_too_large": "Занадто велике зображення",
+    "something_went_wrong": "Щось пішло не так",
+    "not_enough_money": "Недостатньо коштів. Будь ласка, поповніть свiй гаманець"
+  }
+}
