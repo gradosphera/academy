@@ -1,192 +1,196 @@
-# academy-api
+[![GitHub Workflow Status (branch)](https://img.shields.io/github/actions/workflow/status/golang-migrate/migrate/ci.yaml?branch=master)](https://github.com/golang-migrate/migrate/actions/workflows/ci.yaml?query=branch%3Amaster)
+[![GoDoc](https://pkg.go.dev/badge/github.com/golang-migrate/migrate)](https://pkg.go.dev/github.com/golang-migrate/migrate/v4)
+[![Coverage Status](https://img.shields.io/coveralls/github/golang-migrate/migrate/master.svg)](https://coveralls.io/github/golang-migrate/migrate?branch=master)
+[![packagecloud.io](https://img.shields.io/badge/deb-packagecloud.io-844fec.svg)](https://packagecloud.io/golang-migrate/migrate?filter=debs)
+[![Docker Pulls](https://img.shields.io/docker/pulls/migrate/migrate.svg)](https://hub.docker.com/r/migrate/migrate/)
+![Supported Go Versions](https://img.shields.io/badge/Go-1.20%2C%201.21-lightgrey.svg)
+[![GitHub Release](https://img.shields.io/github/release/golang-migrate/migrate.svg)](https://github.com/golang-migrate/migrate/releases)
+[![Go Report Card](https://goreportcard.com/badge/github.com/golang-migrate/migrate/v4)](https://goreportcard.com/report/github.com/golang-migrate/migrate/v4)
 
-Этот репозиторий содержит API для академии. Академия Градосферы — это образовательная платформа, распространяемая через мини-приложение Telegram. Преподаватель может загружать структурированные учебные материалы и делиться ими со студентами, используя созданное мини-приложение в отдельном боте Telegram.
+# migrate
 
-Структура учебных материалов:
+__Database migrations written in Go. Use as [CLI](#cli-usage) or import as [library](#use-in-your-go-project).__
 
-- Каждый `mini-app` содержит `products` (например, курсы или вебинары по озеленению или благоустройству)
-- `product` состоит из `lessons`, сгруппированных по `modules`
-- `product` также может включать платные опции для разблокировки уроков (в codebase и DB они называются `product level`). Они также могут включать некоторые материалы в виде `bonus`
-- `lesson` включает следующие категории: основной материал, список других материалов, домашнее задание.
+* Migrate reads migrations from [sources](#migration-sources)
+   and applies them in correct order to a [database](#databases).
+* Drivers are "dumb", migrate glues everything together and makes sure the logic is bulletproof.
+   (Keeps the drivers lightweight, too.)
+* Database drivers don't assume things or try to correct user input. When in doubt, fail.
 
-Роли пользователей распределены между:
+Forked from [mattes/migrate](https://github.com/mattes/migrate)
 
-- `owner` - пользователь Telegram, создавший мини-приложение, с максимальным доступом к редактированию API.
-- `student` - обычный пользователь, который может просматривать доступные материалы и отправлять домашние задания.
-- `moderator` - в зависимости от выбранного вручную набора прав доступа может дублировать часть прав на запись, предоставленных владельцем.
+## Databases
 
-В настоящее время для каждого мини-приложения разрешен только один владелец, и пользователь может создать только одно мини-приложение. Владельцам и модераторам всех мини-приложений следует использовать специальный Telegram-бот (далее именуемый администратором Telegram-бота).
+Database drivers run migrations. [Add a new database?](database/driver.go)
 
-## Использование API
+* [PostgreSQL](database/postgres)
+* [PGX v4](database/pgx)
+* [PGX v5](database/pgx/v5)
+* [Redshift](database/redshift)
+* [Ql](database/ql)
+* [Cassandra / ScyllaDB](database/cassandra)
+* [SQLite](database/sqlite)
+* [SQLite3](database/sqlite3) ([todo #165](https://github.com/mattes/migrate/issues/165))
+* [SQLCipher](database/sqlcipher)
+* [MySQL / MariaDB](database/mysql)
+* [Neo4j](database/neo4j)
+* [MongoDB](database/mongodb)
+* [CrateDB](database/crate) ([todo #170](https://github.com/mattes/migrate/issues/170))
+* [Shell](database/shell) ([todo #171](https://github.com/mattes/migrate/issues/171))
+* [Google Cloud Spanner](database/spanner)
+* [CockroachDB](database/cockroachdb)
+* [YugabyteDB](database/yugabytedb)
+* [ClickHouse](database/clickhouse)
+* [Firebird](database/firebird)
+* [MS SQL Server](database/sqlserver)
+* [RQLite](database/rqlite)
 
-Все описанные методы API используют Swagger API (спецификация OpenAPI версии 3), доступный через `GET {hostname}/v1/swagger/index.html`.
+### Database URLs
 
-Последовательность действий преподавателя (владельца) для настройки нового мини-приложения:
+Database connection strings are specified via URLs. The URL format is driver dependent but generally has the form: `dbdriver://username:password@host:port/dbname?param1=true&param2=false`
 
-1. Создайте новое мини-приложение (`POST {hostname}/v1/app`). В запросе владелец должен предоставить `init_data` от администратора Telegram-бота. При желании можно указать `bot_token` и `name`, чтобы ученики тоже могли присоединиться, или же эти параметры можно заполнить позже (с помощью `POST {hostname}/v1/app/edit/account`).
-2. Войдите в кабинет преподавателя (`POST {hostname}/v1/auth/admin/signin`), используя `init_data` от администратора Telegram-бота, и получите `access_token`, используемый для доступа ко всем остальным методам и идентификации владельца с полными правами.
-3. Используя `access_token`, владелец может получить список продуктов (`GET {hostname}/v1/app`). При запуске он будет включать только демо-версию продукта, демонстрирующую использование интерфейса.
-4. Теперь, когда всё работает, владелец может продолжить использовать кабинет преподавателя: настраивать контент и систему оплаты за жетоны Благо, приглашать модераторов или студентов, оставлять отзывы о студентах и т.д.
+Any [reserved URL characters](https://en.wikipedia.org/wiki/Percent-encoding#Percent-encoding_reserved_characters) need to be escaped. Note, the `%` character also [needs to be escaped](https://en.wikipedia.org/wiki/Percent-encoding#Percent-encoding_the_percent_character)
 
-Последовательность действий для модератора, чтобы получить доступ к мини-приложению:
+Explicitly, the following characters need to be escaped:
+`!`, `#`, `$`, `%`, `&`, `'`, `(`, `)`, `*`, `+`, `,`, `/`, `:`, `;`, `=`, `?`, `@`, `[`, `]`
 
-1. Перед входом в систему модератор должен получить ссылку-приглашение от владельца. Приглашение содержит список прав, которые будут предоставлены модератору.
-2. Используя отдельный метод входа в API (`POST {hostname}/v1/auth/mod/signin`), пользователь должен передать `invite_id` вместе с `init_data` от администратора Telegram-бота. Ответ будет содержать те же данные, что и для преподавателя/студентов, а также список активных прав.
-3. При следующем входе модератора ему следует сначала использовать API-метод для получения списка мини-приложений, доступных для модерации (`POST {hostname}/v1/auth/mod/list`). Затем, используя тот же API-метод для входа модератора (`POST {hostname}/v1/auth/mod/signin`), указать `mini_app_id` вместо `invite_id`.
+It's easiest to always run the URL parts of your DB connection URL (e.g. username, password, etc) through an URL encoder. See the example Python snippets below:
 
-## Интеграция платежей
+```bash
+$ python3 -c 'import urllib.parse; print(urllib.parse.quote(input("String to encode: "), ""))'
+String to encode: FAKEpassword!#$%&'()*+,/:;=?@[]
+FAKEpassword%21%23%24%25%26%27%28%29%2A%2B%2C%2F%3A%3B%3D%3F%40%5B%5D
+$ python2 -c 'import urllib; print urllib.quote(raw_input("String to encode: "), "")'
+String to encode: FAKEpassword!#$%&'()*+,/:;=?@[]
+FAKEpassword%21%23%24%25%26%27%28%29%2A%2B%2C%2F%3A%3B%3D%3F%40%5B%5D
+$
+```
 
-### Интеграция платежей TON или Благо в существующую кодовую базу
+## Migration Sources
 
-1. Преподаватель создает TON-кошелек и отправляет адрес на сервер.
-2. Пользователь хочет оплатить доступ к курсу.
-3. Генерирует идентификатор платежа, связывающий пользователя с продуктом.
-4. Отправляет TON-адрес преподавателя и генерирует идентификатор платежа.
-5. Фронтенд использует идентификатор платежа в качестве примечания к транзакции и отправляет необходимое количество жетонов Благо на адрес преподавателя.
-6. Бэкенд постоянно отслеживает новые действительные переводы жетонов каждого преподавателя, добавившего адрес TON.
-7. Если перевод жетона действителен, включается заметка о сохраненном в базе данных идентификаторе платежа и количестве жетонов, соответствующих требованиям, после чего статус платежа изменится, и платный контент будет разблокирован для пользователя.
+Source drivers read migrations from local or remote sources. [Add a new source?](source/driver.go)
 
-Использование жетонов Благо может обеспечить настройку, аналогичную традиционным платежным сервисам, а также повысить безопасность, не храня конфиденциальные учетные данные на бэкенде.
+* [Filesystem](source/file) - read from filesystem
+* [io/fs](source/iofs) - read from a Go [io/fs](https://pkg.go.dev/io/fs#FS)
+* [Go-Bindata](source/go_bindata) - read from embedded binary data ([jteeuwen/go-bindata](https://github.com/jteeuwen/go-bindata))
+* [pkger](source/pkger) - read from embedded binary data ([markbates/pkger](https://github.com/markbates/pkger))
+* [GitHub](source/github) - read from remote GitHub repositories
+* [GitHub Enterprise](source/github_ee) - read from remote GitHub Enterprise repositories
+* [Bitbucket](source/bitbucket) - read from remote Bitbucket repositories
+* [Gitlab](source/gitlab) - read from remote Gitlab repositories
+* [AWS S3](source/aws_s3) - read from Amazon Web Services S3
+* [Google Cloud Storage](source/google_cloud_storage) - read from Google Cloud Platform Storage
 
-### Проблемы работы с блокчейном TON
+## CLI usage
 
-При интеграции блокчейна TON возникли некоторые проблемы.
+* Simple wrapper around this library.
+* Handles ctrl+c (SIGINT) gracefully.
+* No config search paths, no config files, no magic ENV var injections.
 
-Собственные API и SDK сложно использовать из-за следующих проблем:
+__[CLI Documentation](cmd/migrate)__
 
-- Наличие множества поставщиков узлов с разным, нечетким лимитом истории;
-- Нестабильное поведение узлов даже для легких узлов;
-- Отсутствие поддержки вебхуков;
-- Сложности мониторинга блокчейна со сложной системой шардинга;
-- Отсутствие видимости транзакций для адресов без баланса TON (даже при наличии других жетонов);
-- Сложная структура транзакций при передаче жетонов и процессе проверки.
+### Basic usage
 
-По указанным причинам сторонние сервисы могут быть хорошим вариантом. В этом проекте сервис TonAPI (https://docs.tonconsole.com/tonapi) используется в качестве резервного на случай удаления учётной записи с узла TON из-за отсутствия баланса TON.
+```bash
+$ migrate -source file://path/to/migrations -database postgres://localhost:5432/database up 2
+```
 
-Также TonAPI поддерживает такие функции, как подписка на получение новых транзакций по выбранным адресам и многое другое. Это улучшает интеграцию и упрощает разработку и поддержку.
+### Docker usage
 
-## Технические подробности
+```bash
+$ docker run -v {{ migration dir }}:/migrations --network host migrate/migrate
+    -path=/migrations/ -database postgres://localhost:5432/database up 2
+```
 
-Постоянные данные хранятся отдельно в Redis (для кэширования токенов обновления) и PostgreSQL (для хранения практически любых других данных). Проект также использует файловую систему Unix для хранения загруженных файлов.
+## Use in your Go project
 
-Перед созданием новых мини-приложений необходимо создать основное мини-приложение для учителей, позволяющее им выполнять первоначальную авторизацию пользователей Telegram. Используйте `TELEGRAM_BOT_TOKEN` для настройки бота администратора Telegram.
+* API is stable and frozen for this release (v3 & v4).
+* Uses [Go modules](https://golang.org/cmd/go/#hdr-Modules__module_versions__and_more) to manage dependencies.
+* To help prevent database corruptions, it supports graceful stops via `GracefulStop chan bool`.
+* Bring your own logger.
+* Uses `io.Reader` streams internally for low memory overhead.
+* Thread-safe and no goroutine leaks.
 
-`ENCRYPTION_KEY` используется для шифрования и дешифрования секретных данных, хранящихся в PostgreSQL. Сюда входят токен бота мини-приложения учителя и пароль WayForPay. Он должен иметь размер 16 или 24 символа, чтобы быть совместимым с функцией `aes.NewCipher` и соответствовать ограничениям базы данных. Этот код можно использовать для генерации нового ключа:
+__[Go Documentation](https://pkg.go.dev/github.com/golang-migrate/migrate/v4)__
 
 ```go
-package main
-
 import (
-	"crypto/rand"
-	"encoding/hex"
-	"io"
+    "github.com/golang-migrate/migrate/v4"
+    _ "github.com/golang-migrate/migrate/v4/database/postgres"
+    _ "github.com/golang-migrate/migrate/v4/source/github"
 )
 
 func main() {
-	nonce := make([]byte, 24)
-	if _, err := io.ReadFull(rand.Reader, nonce); err != nil {
-		panic(err)
-	}
-	println(hex.EncodeToString(nonce))
+    m, err := migrate.New(
+        "github://mattes:personal-access-token@mattes/migrate_test",
+        "postgres://localhost:5432/database?sslmode=enable")
+    m.Steps(2)
 }
 ```
 
-При внесении любых изменений в структуру загружаемых материалов (аватары, логотипы, видео, изображения, PDF-файлы и т. д.) убедитесь, что сервис **auth-removal** синхронизирован с другими частями проекта. Это связано с тем, что сервис **auth-removal** удаляет все загруженные файлы, которые не следуют строго заданному пути и не назначены существующим ресурсам в базе данных Postgres. Подробности см. в файле `internal/service/upload/upload.go` (например, метод `ClearDanglingUploads`).
+Want to use an existing database client?
 
-Также при внесении изменений в модели убедитесь, что новая схема совместима с **triggers** (в отдельном файле в миграциях). Это связано с тем, что некоторые ошибки будут срабатывать только во время выполнения, что затруднит их последующее тестирование/отладку.
+```go
+import (
+    "database/sql"
+    _ "github.com/lib/pq"
+    "github.com/golang-migrate/migrate/v4"
+    "github.com/golang-migrate/migrate/v4/database/postgres"
+    _ "github.com/golang-migrate/migrate/v4/source/file"
+)
 
-В настоящее время для загружаемых видеоматериалов используетс сервис Mux. Для активации этого сервиса загружайте видеофайлы по частям и отправляйте их со статусом `pending_move_to_mux`. После этого cron-задание выберет их и загрузит в Mux. Документацию по самому сервису и API можно найти по адресу https://www.mux.com/docs/guides/upload-files-directly. Материалы Mux будут включать `metadata`, используемые для генерации временных ссылок на воспроизведение видео (`playback_id`), и `asset_id`, используемый для удаления ресурсов при удалении материала пользователем.
-
-## Настройка проекта
-
-1. Клонируйте репозиторий:
-
-```sh
-git clone https://github.com/gradosphera/academy.git
-cd academy/Backend
-```
-
-1. Создайте файл `.env`:
-
-```sh
-cp .env.example .env
-```
-
-3. Настройте базы данных postgres и redis, например, с помощью docker:
-
-```sh
-docker run -d --name some-redis -p 6379:6379 \
-            redis:latest redis-server --requirepass your_strong_password
-docker run -d --name some-postgres -p 5432:5432 -e POSTGRES_PASSWORD=mysecretpassword \
-            postgres
-```
-
-4. Создайте файл конфигурации для основного бота TG, который будет отвечать на команду `/start`. Например, в `resources/bot.config.json` (`TELEGRAM_BOT_CONFIG`) создайте файл со следующим содержимым:
-
-```json
-{
-  "response": {
-    "command": "start",
-    "message": "Добро пожаловать в Академию Градосферы...",
-    "button_text": "Create mini-app",
-    "button_link": "https://t.me/example_name_bot/example_name_mini_app"
-  }
+func main() {
+    db, err := sql.Open("postgres", "postgres://localhost:5432/database?sslmode=enable")
+    driver, err := postgres.WithInstance(db, &postgres.Config{})
+    m, err := migrate.NewWithDatabaseInstance(
+        "file:///migrations",
+        "postgres", driver)
+    m.Up() // or m.Step(2) if you want to explicitly set the number of migrations to run
 }
 ```
 
-Также используйте `TELEGRAM_BOT_IMAGE` для указания изображения, которое будет использоваться в ответном сообщении.
+## Getting started
 
-1. Если вам нужно использовать пользовательское сжатие видеофайла с помощью `ffmpeg` (можно использовать с загруженными материалами со статусом `pending_compressing`), то исполняемый файл `ffmpeg` следует включить в исполняемый файл проекта. В настоящее время `ffmpeg` отключен. Вместо этого видео можно загрузить на отдельный сторонний сервис, например `Mux`.
+Go to [getting started](GETTING_STARTED.md)
 
-Первоначальная проблема со сжатием заключалась в том, что некоторые видео не оптимизированы для просмотра в вебе. Поэтому возможность простого скачивания пользователем случайных файлов `.mp4` могла привести к нестабильной работе.
+## Tutorials
 
-6. Конфигурации демонстрационного продукта следует добавить в `UPLOAD_DIRECTORY` в каталоге `demo`. Файлы, которые следует включить в этот каталог, можно найти в исходном коде `/internal/service/upload/demo.go`. Файл содержит жёстко заданные имена файлов и алгоритм их использования.
+* [CockroachDB](database/cockroachdb/TUTORIAL.md)
+* [PostgreSQL](database/postgres/TUTORIAL.md)
 
-7. Заполните `.env`, используя: учетные данные БД, основной бот Telegram и т. д.
+(more tutorials to come)
 
-8. Соберите и запустите исполняемый файл:
+## Migration files
 
-```sh
-go build ./cmd/app
-./app
+Each migration has an up and down migration. [Why?](FAQ.md#why-two-separate-files-up-and-down-for-a-migration)
+
+```bash
+1481574547_create_users_table.up.sql
+1481574547_create_users_table.down.sql
 ```
 
-## Структура проекта
+[Best practices: How to write migrations.](MIGRATIONS.md)
 
-```
-├── .env          # Переменные окружения
-├── cmd/          # Каталог с исполняемыми файлами для сборки
-├── internal/     # Внутренний код приложения
-│ ├── api/        # Уровень API (обработчики HTTP)
-│ ├── config/     # Загрузка конфигурации из переменных окружения
-│ ├── cron/       # Фоновые задания cron для очистки неиспользуемых ресурсов
-│ ├── database/   # Коннекторы к базе данных
-│ ├── logger/     # Настройка для logger
-│ ├── model/      # Модели данных
-│ ├── service/    # Уровень сервисов (бизнес-логика)
-│ ├── storage/    # Уровень репозитория (доступ к данным)
-│ └── types/      # Пользовательские типы Go
-├── migrations/   # Миграции для PortgreSQL
-└── resources/    # Статические ресурсы и загруженные файлы
-```
+## Coming from another db migration tool?
 
-## Нужно сделать
+Check out [migradaptor](https://github.com/musinit/migradaptor/).
+*Note: migradaptor is not affliated or supported by this project*
 
-### Задачи
+## Versions
 
-1. Отправлять аналитику учителю через Telegram-бот в 13:00 по местному времени
-2. Добавить покупку создателем курсов - тарифных планов мини-приложений
+Version | Supported? | Import | Notes
+--------|------------|--------|------
+**master** | :white_check_mark: | `import "github.com/golang-migrate/migrate/v4"` | New features and bug fixes arrive here first |
+**v4** | :white_check_mark: | `import "github.com/golang-migrate/migrate/v4"` | Used for stable releases |
+**v3** | :x: | `import "github.com/golang-migrate/migrate"` (with package manager) or `import "gopkg.in/golang-migrate/migrate.v3"` (not recommended) | **DO NOT USE** - No longer supported |
 
-### Исправить
+## Development and Contributing
 
-1. Обрабатывать одновременные загрузки чанков. Возможные крайние случаи:
+Yes, please! [`Makefile`](Makefile) is your friend,
+read the [development guide](CONTRIBUTING.md).
 
-- загрузка одного и того же файла (первый будет работать, но второй перезапишет материал повреждёнными данными)
-- загрузка разных файлов (например, после отмены загрузки большого файла и начала загрузки маленького, что может привести к повреждению данных из старого большого файла в маленький)
+Also have a look at the [FAQ](FAQ.md).
 
-2. Рассмотреть возможность учёта размера сгенерированных файлов Excel для мини-приложения Ограничение
-3. Возможность реализации автоматического удаления ресурсов мультиплексора для ресурсов, не подключенных к каким-либо ресурсам в базе данных Postgres. Причины не добавлять эту функцию:
+---
 
-- Мультиплексор взимает плату только за время воспроизведения, а не за размер или количество материалов.
-- Некоторые ресурсы может быть полезно сохранить, поэтому следует реализовать чёткое разделение сред (отдельные среды prod/stage в мультиплексоре и исключить их повторное использование вне проекта).
-- Текущая реализация с использованием `mux_assets_to_delete` достаточна для большинства случаев использования.
+Looking for alternatives? [https://awesome-go.com/#database](https://awesome-go.com/#database).

@@ -194,7 +194,7 @@ func (h *V1Handler) HandleMaterialHeaders(c fiber.Ctx) error {
 	}
 
 	var ranges []httpRange
-	for ra := range strings.SplitSeq(rangeHeader[len(b):], ",") {
+	for _, ra := range strings.Split(rangeHeader[len(b):], ",") {
 		ra = textproto.TrimString(ra)
 		if ra == "" {
 			continue

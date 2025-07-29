@@ -1,6 +1,8 @@
 module academy
 
-go 1.24
+go 1.23.0
+
+toolchain go1.23.11
 
 require (
 	github.com/caarlos0/env/v11 v11.3.1

@@ -34,7 +34,7 @@ type Payment struct {
 	AccessDuration types.Interval  `bun:"access_duration,type:interval,nullzero" json:"access_duration"`
 	Amount         decimal.Decimal `bun:"amount,type:decimal,notnull" json:"amount"`
 	Currency       string          `bun:"currency,type:varchar(10),notnull" json:"currency"`
-	AmountUSD      decimal.Decimal `bun:"amount_usd,type:decimal(12,2),notnull" json:"amount_usd"`
+	AmountBLG      decimal.Decimal `bun:"amount_blg,type:decimal(12,2),notnull" json:"amount_blg"`
 	Status         PaymentStatus   `bun:"status,type:payment_status,notnull" json:"status"`
 	URL            string          `bun:"url,type:varchar(255),notnull" json:"url"`
 	Comment        string          `bun:"comment,type:text,notnull,default:''" json:"comment"`
@@ -135,7 +135,7 @@ type StudentsPayment struct {
 	ProductName      string `bun:"product_name"`
 	ProductLevelName string `bun:"product_level_name"`
 
-	AmountUSD string `bun:"amount_usd"`
+	AmountBLG string `bun:"amount_blg"`
 
 	PaidAt time.Time `bun:"paid_at"`
 }

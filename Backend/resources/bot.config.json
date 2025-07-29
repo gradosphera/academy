@@ -1,0 +1,8 @@
+{
+    "response": {
+        "command": "start",
+        "message": "Добро пожаловать в Академию Градосферы...",
+        "button_text": "Create mini-app",
+        "button_link": "https://t.me/example_name_bot/example_name_mini_app"
+    }
+}

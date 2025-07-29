@@ -1,10 +1,10 @@
 import CookieManager from "./cookieManager.js";
-import {useProductsStore} from "../store/productsStore.js";
-import {getMiniApp, getProduct} from "../api/api.js";
-import {useMiniAppStore} from "../store/miniAppStore.js";
-import {BASE_MEDIA_URL} from "../constants/const.js";
-import {event} from "vue-gtag";
-import {useGtm} from "@gtm-support/vue-gtm";
+import { useProductsStore } from "../store/productsStore.js";
+import { getMiniApp, getProduct } from "../api/api.js";
+import { useMiniAppStore } from "../store/miniAppStore.js";
+import { BASE_MEDIA_URL } from "../constants/const.js";
+import { event } from "vue-gtag";
+import { useGtm } from "@gtm-support/vue-gtm";
 
 const productStore = useProductsStore();
 
@@ -59,7 +59,7 @@ export const timeSince = (dateString) => {
     days += prevMonth.getDate();
   }
 
-  return {year, months, days};
+  return { year, months, days };
 }
 
 export const getAvgScore = (avgScore) => {
@@ -88,7 +88,7 @@ export const formatFileSize = (bytes) => {
 };
 
 export const getProductData = async (id) => {
-  const {setSelectedProduct, setProductProgress, setProductReviews, setPaidLessons, setProductInvite} = useProductsStore();
+  const { setSelectedProduct, setProductProgress, setProductReviews, setPaidLessons, setProductInvite } = useProductsStore();
   const resp = await getProduct(id);
 
   if (resp.data) {
@@ -149,7 +149,7 @@ export const getCurrencySymbol = (currency) => {
   if (!currency || !currency.length) return '';
 
   switch (currency) {
-    case 'USD':
+    case 'BLG':
       return '$';
     case 'EUR':
       return '€';

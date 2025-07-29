@@ -59,25 +59,25 @@ func (s *PaymentService) CreateTONPayment(
 	payment := model.NewPaymentForProductLevel(userID, product, productLevel)
 	payment.URL = paymentMetadata.TONAddress
 
-	var amountUSD decimal.Decimal
+	var amountBLG decimal.Decimal
 	if payment.Currency == "UAH" {
-		usdRate, ok := rates["USD"]
+		blgRate, ok := rates["BLG"]
 		if !ok {
-			return nil, fmt.Errorf("no USD rate available")
+			return nil, fmt.Errorf("no BLG rate available")
 		}
-		amountUSD = payment.Amount.Div(usdRate).RoundDown(2)
+		amountBLG = payment.Amount.Div(blgRate).RoundDown(2)
 	} else {
 		currRate, ok := rates[payment.Currency]
 		if !ok {
 			return nil, fmt.Errorf("no rate available for %q", payment.Currency)
 		}
-		usdRate, ok := rates["USD"]
+		blgRate, ok := rates["BLG"]
 		if !ok {
-			return nil, fmt.Errorf("no USD rate available")
+			return nil, fmt.Errorf("no BLG rate available")
 		}
-		amountUSD = payment.Amount.Mul(currRate).Div(usdRate).RoundDown(2)
+		amountBLG = payment.Amount.Mul(currRate).Div(blgRate).RoundDown(2)
 	}
-	payment.AmountUSD = amountUSD
+	payment.AmountBLG = amountBLG
 
 	err = s.paymentRepository.Create(ctx, payment)
 	if err != nil {
@@ -123,25 +123,25 @@ func (s *PaymentService) CreateWayForPayPayment(
 	}
 	payment.URL = invoiceURL
 
-	var amountUSD decimal.Decimal
+	var amountBLG decimal.Decimal
 	if payment.Currency == "UAH" {
-		usdRate, ok := rates["USD"]
+		blgRate, ok := rates["BLG"]
 		if !ok {
-			return nil, fmt.Errorf("no USD rate available")
+			return nil, fmt.Errorf("no BLG rate available")
 		}
-		amountUSD = payment.Amount.Div(usdRate).RoundDown(2)
+		amountBLG = payment.Amount.Div(blgRate).RoundDown(2)
 	} else {
 		currRate, ok := rates[payment.Currency]
 		if !ok {
 			return nil, fmt.Errorf("no rate available for %q", payment.Currency)
 		}
-		usdRate, ok := rates["USD"]
+		blgRate, ok := rates["BLG"]
 		if !ok {
-			return nil, fmt.Errorf("no USD rate available")
+			return nil, fmt.Errorf("no BLG rate available")
 		}
-		amountUSD = payment.Amount.Mul(currRate).Div(usdRate).RoundDown(2)
+		amountBLG = payment.Amount.Mul(currRate).Div(blgRate).RoundDown(2)
 	}
-	payment.AmountUSD = amountUSD
+	payment.AmountBLG = amountBLG
 
 	err = s.paymentRepository.Create(ctx, payment)
 	if err != nil {
@@ -292,7 +292,7 @@ func (s *PaymentService) ExportMiniAppPayments(
 
 	headers := []string{
 		"Telegram ID", "Telegram Username",
-		"Product", "Product Tier", "Amount (USD)", "Purchase Time",
+		"Product", "Product Tier", "Amount (BLG)", "Purchase Time",
 	}
 
 	cell, _ := excelize.CoordinatesToCellName(1, 1)
@@ -308,7 +308,7 @@ func (s *PaymentService) ExportMiniAppPayments(
 
 			p.ProductName,
 			p.ProductLevelName,
-			p.AmountUSD,
+			p.AmountBLG,
 			p.PaidAt,
 		}
 		err = f.SetSheetRow("Sheet1", cell, &paymentRow)

@@ -170,7 +170,7 @@ func (r *PaymentRepository) StudentsPayments(
 		u.telegram_username,
 		COALESCE(p.title, '') AS product_name,
 		COALESCE(pl."name", '') AS product_level_name,
-		payments.amount_usd,
+		payments.amount_blg,
 		payments.updated_at AS paid_at
 	FROM payments
 	JOIN users AS u ON u.id = payments.user_id AND u.role = 'student'

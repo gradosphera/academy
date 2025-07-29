@@ -1,7 +1,6 @@
 package model
 
 import (
-	"crypto/rand"
 	"encoding/json"
 	"fmt"
 	"slices"
@@ -86,7 +85,7 @@ func (r *CreateMiniAppRequest) Validate() error {
 		return fmt.Errorf("empty init_data")
 	}
 	if r.Name == "" {
-		r.Name = "temp_" + rand.Text()
+		r.Name = "temp_" + uuid.New().String()[:8]
 	}
 
 	return nil

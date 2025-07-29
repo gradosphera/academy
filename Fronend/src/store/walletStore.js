@@ -112,7 +112,7 @@ export const useWalletStore = defineStore("wallet", () => {
       const walletData = await jettonWallet.getWalletData();
       balance.value.blg = Number(walletData.balance) / 1e0;
 
-      if (balance.value.blg < invoice.amount_usd && balance.value.ton < 0.1) {
+      if (balance.value.blg < invoice.amount_blg && balance.value.ton < 0.1) {
         toastStore.error({ text: t('general.toast_notifications.not_enough_money') })
 
         return;

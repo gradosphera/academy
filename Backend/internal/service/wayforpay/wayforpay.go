@@ -25,7 +25,7 @@ var allowedCurrencies = map[string]bool{
 	"MXN": true, "MYR": true, "NOK": true, "NZD": true, "PKR": true,
 	"PLN": true, "RON": true, "RSD": true, "RUB": true, "SAR": true,
 	"SEK": true, "SGD": true, "THB": true, "TJS": true, "TMT": true,
-	"TND": true, "TRY": true, "TWD": true, "UAH": true, "USD": true,
+	"TND": true, "TRY": true, "TWD": true, "UAH": true, "BLG": true,
 	"UZS": true, "VND": true, "ZAR": true,
 }
 

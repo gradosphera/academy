@@ -2335,7 +2335,7 @@ components:
           type: string
         currency:
           type: string
-        amount_usd:
+        amount_blg:
           type: string
         status:
           type: string

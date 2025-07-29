@@ -278,10 +278,10 @@ func (s *Service) applyJettonTransfers(ctx context.Context, transfers []*model.J
 				continue
 			}
 
-			if transfer.JettonAmount.LessThan(payment.AmountUSD) {
+			if transfer.JettonAmount.LessThan(payment.AmountBLG) {
 				s.logger.Warn("paid jetton amount is less than required payment amount",
 					zap.Error(err),
-					zap.String("required amount", payment.AmountUSD.String()),
+					zap.String("required amount", payment.AmountBLG.String()),
 					zap.String("actual amount", transfer.JettonAmount.String()),
 				)
 				continue

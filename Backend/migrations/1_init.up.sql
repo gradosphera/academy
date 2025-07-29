@@ -60,19 +60,19 @@ INSERT INTO plans (
     20, 1, 1, 5000000000, FALSE, FALSE, NULL, TRUE
 ),
 (
-    'standard_monthly', 'Standard', '', 19, 19, 'USD',
+    'standard_monthly', 'Standard', '', 19, 19, 'BLG',
     500, 10, 10, 10000000000, TRUE, TRUE, '1 month', TRUE
 ),
 (
-    'standard_yearly', 'Standard', '', 144, 144, 'USD',
+    'standard_yearly', 'Standard', '', 144, 144, 'BLG',
     500, 10, 10, 10000000000, TRUE, TRUE, '1 year', TRUE
 ),
 (
-    'premium_monthly', 'Premium', '', 49, 49, 'USD',
+    'premium_monthly', 'Premium', '', 49, 49, 'BLG',
     NULL, NULL, NULL, 500000000000, TRUE, TRUE, '1 month', TRUE
 ),
 (
-    'premium_yearly', 'Premium', '', 444, 444, 'USD',
+    'premium_yearly', 'Premium', '', 444, 444, 'BLG',
     NULL, NULL, NULL, 500000000000, TRUE, TRUE, '1 year', TRUE
 ),
 (
@@ -308,7 +308,7 @@ CREATE TABLE IF NOT EXISTS payments (
     "access_duration" INTERVAL,
     "amount" DECIMAL NOT NULL,
     "currency" VARCHAR(10) NOT NULL,
-    "amount_usd" DECIMAL(12,2) NOT NULL,
+    "amount_blg" DECIMAL(12,2) NOT NULL,
     "status" payment_status NOT NULL,
     "url" VARCHAR(255) NOT NULL,
     "comment" TEXT DEFAULT '' NOT NULL,

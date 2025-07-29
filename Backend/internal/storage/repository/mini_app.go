@@ -260,11 +260,11 @@ func (r *MiniAppRepository) Analytics(
 			SELECT COUNT(*) FROM mini_app_students
 		) AS total_students,
 		(
-			SELECT COALESCE(SUM("amount_usd"), 0) FROM mini_app_payments
+			SELECT COALESCE(SUM("amount_blg"), 0) FROM mini_app_payments
 			WHERE ? < updated_at
 		) AS money_earned,
 		(
-			SELECT COALESCE(SUM("amount_usd"), 0) FROM mini_app_payments
+			SELECT COALESCE(SUM("amount_blg"), 0) FROM mini_app_payments
 		) AS total_money_earned
 	`, miniAppID, miniAppID, periodStart, periodStart).
 		Scan(ctx, &analytics)
@@ -311,12 +311,12 @@ func (r *MiniAppRepository) Analytics(
 			0 AS total_students,
 			COALESCE(
 				SUM(
-					CASE WHEN ? < payments.updated_at THEN COALESCE(payments.amount_usd, 0) END
+					CASE WHEN ? < payments.updated_at THEN COALESCE(payments.amount_blg, 0) END
 				), 0
 			) AS money_earned,
 			COALESCE(
 				SUM(
-					COALESCE(payments.amount_usd, 0)
+					COALESCE(payments.amount_blg, 0)
 				), 0
 			) AS total_money_earned
 		FROM mini_app_products AS p
