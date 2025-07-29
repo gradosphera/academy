@@ -272,6 +272,7 @@ const formatTime = (time) => {
         padding: 10px;
         cursor: pointer;
         -webkit-appearance: none;
+        appearance: none;
         width: 100%;
         height: 4px;
         background: transparent;

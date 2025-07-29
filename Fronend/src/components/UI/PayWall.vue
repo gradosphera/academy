@@ -38,6 +38,7 @@
           <div class="selected-course__modal_tariffs">
             <div
                 v-for="tariff in tariffs"
+                :key="tariff.id"
                 @click="handleTariffSelect(tariff)"
                 :style="{borderColor: tariff.id === selectedTariff?.id ? selectedTariffBorderStyle : 'rgba(255, 255, 255, 0.12)'}"
                 :class="['selected-course__modal_tariff', {active: tariff.id === selectedTariff?.id}]"
