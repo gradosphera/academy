@@ -35,7 +35,7 @@ const handleClick = () => {
 </template>
 
 <style scoped lang="scss">
-@import "../../assets/styles/main.scss";
+@use "../../assets/styles/main.scss" as *;
 
 .btn_next-other {
   display: flex;

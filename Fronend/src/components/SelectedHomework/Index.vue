@@ -106,7 +106,7 @@ onUnmounted(() => {
 })
 </script>
 <style scoped lang="scss">
-@import "../../assets/styles/main.scss";
+@use "../../assets/styles/main.scss" as *;
 
 .selected-homework {
   height: calc(100vh - 1px);

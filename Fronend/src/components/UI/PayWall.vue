@@ -232,7 +232,7 @@ watch(() => props.isPayWallOpen, (val) => {
 })
 </script>
 <style scoped lang="scss">
-@import "../../assets/styles/main.scss";
+@use "../../assets/styles/main.scss" as *;
 
 .selected-course {
   &__modal {

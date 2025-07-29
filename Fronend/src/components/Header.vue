@@ -61,7 +61,7 @@ const getLogo = computed(() => {
 })
 </script>
 <style scoped lang="scss">
-@import "../assets/styles/main.scss";
+@use "../assets/styles/main.scss" as *;
 
 .header {
   &_container {

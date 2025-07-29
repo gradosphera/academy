@@ -1,14 +1,11 @@
-//Fonts
-@import url("https://fonts.googleapis.com/css2?family=Geologica:wght@600&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap");
+//Colors
+@use "colors" as *;
 
 //Base
-@import "base";
-
-//Colors
-@import "colors";
-
-//Styles
-@import "base";
+@use "base" as *;
 
 //Mixins
-@import "mixins";
+@use "mixins" as *;
+
+//Fonts
+@import url("https://fonts.googleapis.com/css2?family=Geologica:wght@600&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Manrope:wght@200..800&display=swap");

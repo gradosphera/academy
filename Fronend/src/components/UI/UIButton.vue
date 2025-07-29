@@ -23,7 +23,7 @@ defineProps({
 const emits = defineEmits(['cta']);
 </script>
 <style scoped lang="scss">
-@import "../../assets/styles/main.scss";
+@use "../../assets/styles/main.scss" as *;
 
 .ui-button {
   height: 45px;

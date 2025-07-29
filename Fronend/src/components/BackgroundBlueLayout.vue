@@ -12,7 +12,7 @@ const miniAppStore = useMiniAppStore();
 </template>
 
 <style scoped lang="scss">
-@import "../assets/styles/main.scss";
+@use "../assets/styles/main.scss" as *;
 .bottom-content {
   position: fixed;
   z-index: 0;

@@ -29,5 +29,5 @@ const tabsStore = useNavTabsStore();
 </template>
 
 <style lang="scss">
-@import './assets/styles/_main.scss';
+@use './assets/styles/_main.scss' as *;
 </style>

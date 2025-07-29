@@ -95,7 +95,7 @@ watch(() => miniAppStore.afterPaymentData?.status, (val) => {
 }, {immediate: true, deep: true})
 </script>
 <style scoped lang="scss">
-@import "../../../assets/styles/main.scss";
+@use "../../../assets/styles/main.scss" as *;
 
 .payment-status {
   position: fixed;

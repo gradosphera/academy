@@ -19,7 +19,7 @@ import {useI18n} from "vue-i18n";
 const {t} = useI18n();
 </script>
 <style scoped lang="scss">
-@import "../assets/styles/_main.scss";
+@use "../assets/styles/_main.scss" as *;
 .app {
   width: 100%;
   min-height: calc(100vh - 1px);

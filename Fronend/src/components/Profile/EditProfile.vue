@@ -254,7 +254,7 @@ onMounted(() => {
 })
 </script>
 <style scoped lang="scss">
-@import "../../assets/styles/main.scss";
+@use "../../assets/styles/main.scss" as *;
 
 .edit-profile {
   padding: 24px 24px 185px;

@@ -187,7 +187,7 @@ onMounted(async () => {
 })
 </script>
 <style scoped lang="scss">
-@import "../assets/styles/_main.scss";
+@use "../assets/styles/_main.scss" as *;
 
 .loader {
   background: #000;

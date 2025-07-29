@@ -59,7 +59,7 @@ const toggleNewTab = tab => {
 </template>
 
 <style scoped lang="scss">
-@import "../assets/styles/_main.scss";
+@use "../assets/styles/_main.scss" as *;
 
 .nav {
   &-bar {

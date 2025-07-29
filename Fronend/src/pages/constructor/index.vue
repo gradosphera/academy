@@ -83,7 +83,7 @@ const content = {
 }
 </script>
 <style scoped lang="scss">
-@import "../../assets/styles/_main.scss";
+@use "../../assets/styles/_main.scss" as *;
 .constructor {
   width: 100%;
   min-height: calc(100vh - 1px);
