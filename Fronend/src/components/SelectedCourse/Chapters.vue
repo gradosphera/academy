@@ -3,8 +3,10 @@
     <div class="chapter" v-for="chapter in productStore.selectedProductModules" :key="chapter.name">
       <p :class="['chapter_title', {'available' : chapter.id === 1 || isLessonAvailable(chapter.id - 1)}]">{{chapter.name}}</p>
       <div class="chapter_lessons">
-        <SkeletonLesson v-if="isMediaLoading" v-for="(lesson, i) in chapter.items" :key="lesson.id" />
-        <div v-show="!isMediaLoading" class="lesson_wrapper" v-for="(lesson, i) in chapter.items" :key="lesson.id">
+        <template v-if="isMediaLoading">
+          <SkeletonLesson v-for="lesson in chapter.items" :key="lesson.id" />
+        </template>
+        <div v-show="!isMediaLoading" class="lesson_wrapper" v-for="lesson in chapter.items" :key="lesson.id">
           <div @click="openLesson(lesson)" class="lesson">
             <div v-if="lesson?.release_date && !isDatePassed(lesson?.release_date)" class="lesson__schedule">
               <div class="lesson__schedule_text">{{t('general.main.lesson_scheduled')}}</div>
@@ -26,9 +28,9 @@
                   {{t('general.main.lesson_video_compressing')}}
                 </div>
                 <div :class="['lesson_title', {'available': lesson.lessonId === 1 || isLessonAvailable(lesson.lessonId - 1)}]">
-                <span v-for="(line, index) in parseMessage(lesson.materials?.[0]?.title)" :key="index">
+                <span v-for="(line, index) in getParsedLessonTitle(lesson)" :key="index">
                   {{ line }}
-                  <br v-if="index < parseMessage(lesson.materials?.[0]?.title).length - 1"/>
+                  <br v-if="index < getParsedLessonTitle(lesson).length - 1"/>
                 </span>
                 </div>
               </div>
@@ -60,13 +62,9 @@ import SVGLessonTextType from "../svg/SVGLessonTextType.vue";
 import {getLesson} from "../../api/api.js";
 import SVGBlockLesson from "../svg/SVGBlockLesson.vue";
 import SkeletonLesson from "../Skeletons/SkeletonLesson.vue";
-import {onBeforeUnmount, onMounted, reactive, ref} from "vue";
+import {computed, onBeforeUnmount, onMounted, reactive, ref} from "vue";
 import {useMediaLoader} from "../../composable/useMediaLoader.js";
 import {useToastStore} from "../../store/toastStore.js";
-
-const props = defineProps({
-  progress: Array,
-})
 
 const emits = defineEmits(['closeModal', 'openModal']);
 const {t} = useI18n();
@@ -89,11 +87,11 @@ const openLesson = async (lesson) => {
     const resp = await getLesson(lesson.id);
 
     if (resp.data) {
-      const lesson = resp.data.lesson;
+      const selectedLesson = resp.data.lesson;
       productStore.setSelectedLesson(resp.data.lesson);
 
       submitAnalyticsData('lesson_open', {
-        lesson_title: lesson?.title,
+        lesson_title: selectedLesson?.title,
         course_title: productStore.selectedProduct?.title || '',
       })
     }
@@ -101,6 +99,10 @@ const openLesson = async (lesson) => {
     navTabsStore.setPreviousTab();
     toastStore.error({text: t('general.main.failed_open_lesson')});
   }
+}
+
+const getParsedLessonTitle = (lesson) => {
+  return parseMessage(lesson.materials?.[0]?.title);
 }
 
 const getLessonTypeIcon = (lesson) => {
@@ -377,7 +379,7 @@ onBeforeUnmount(() => {
             font-style: normal;
             font-weight: 400;
             line-height: normal;
-            text-wrap: nowrap;
+            white-space: nowrap;
 
             &::before, &::after {
               content: '';

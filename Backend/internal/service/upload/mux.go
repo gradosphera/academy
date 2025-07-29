@@ -35,11 +35,6 @@ func (s *Service) MuxUpload(ctx context.Context, filename string) (*model.MuxVid
 	uploadID := uploadResp.Data.Id
 	uploadURL := uploadResp.Data.Url
 
-	// err = s.muxUploadFile(ctx, filename, uploadURL)
-	// if err != nil {
-	// 	return nil, fmt.Errorf("failed to upload file to mux: %w", err)
-	// }
-
 	err = s.muxChunkedUploadFile(ctx, filename, uploadURL, chunkSize)
 	if err != nil {
 		return nil, fmt.Errorf("failed to upload file to mux by chunks: %w", err)
@@ -189,42 +184,6 @@ func (s *Service) muxCreateUpload(ctx context.Context) (*muxgo.UploadResponse, e
 	}
 
 	return &uploadResp, nil
-}
-
-func (s *Service) muxUploadFile(ctx context.Context, filename, uploadURL string) error {
-	file, err := os.Open(filepath.Join(s.uploadDir, filename))
-	if err != nil {
-		return fmt.Errorf("failed to open file: %v", err)
-	}
-	defer file.Close()
-
-	var buf bytes.Buffer
-	_, err = io.Copy(&buf, file)
-	if err != nil {
-		return fmt.Errorf("failed to copy file: %v", err)
-	}
-
-	req, err := http.NewRequestWithContext(ctx, http.MethodPut, uploadURL, &buf)
-	if err != nil {
-		return fmt.Errorf("failed to create upload request: %v", err)
-	}
-
-	req.Header.Set("Content-Type", "video/mp4")
-
-	// Create custom http client with timeout to process large files.
-	client := &http.Client{Timeout: 20 * time.Minute}
-	resp, err := client.Do(req)
-	if err != nil {
-		return fmt.Errorf("failed to upload to mux: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusCreated {
-		body, _ := io.ReadAll(resp.Body)
-		return fmt.Errorf("mux upload error: %d - %s", resp.StatusCode, string(body))
-	}
-
-	return nil
 }
 
 func (s *Service) muxChunkedUploadFile(

@@ -191,47 +191,6 @@ func (c *Cron) videoProcessing() {
 	c.muxUploadVideos()
 }
 
-// Deprecated: switched to using muxUploadVideos.
-func (c *Cron) compressVideos() {
-	ctx := context.Background()
-
-	materials, err := c.materialService.FindPendingCompressing(ctx, 100)
-	if err != nil {
-		c.logger.Error("compressVideos: cron job failed: failed to find materials",
-			zap.Error(err),
-		)
-		return
-	}
-
-	for _, m := range materials {
-		c.logger.Info("compressVideos: start compressing...", zap.String("filename", m.Filename))
-
-		compressedSize, err := c.uploadService.CompressVideo(ctx, m.Filename)
-		if err != nil {
-			c.logger.Error("compressVideos: cron job failed: compress video",
-				zap.String("filename", m.Filename),
-				zap.Error(err),
-			)
-			return
-		}
-
-		m.Size = compressedSize
-		m.Status = model.MaterialStatusReady
-		m.UpdatedAt = time.Now()
-
-		if err := c.materialService.Update(ctx, m); err != nil {
-			c.logger.Error("compressVideos: cron job failed: failed to save changes into db",
-				zap.String("filename", m.Filename),
-				zap.Error(err),
-			)
-			return
-		}
-		c.logger.Info("compressVideos: finished compressing", zap.String("filename", m.Filename))
-	}
-
-	// c.logger.Info("compressVideos: cron job successfully finished")
-}
-
 func (c *Cron) muxUploadVideos() {
 	ctx := context.Background()
 

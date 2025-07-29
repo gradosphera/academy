@@ -7,9 +7,12 @@
       <p>{{t('general.main.product_empty_list')}}</p>
     </div>
     <div v-show="productsStore.availableProducts?.length" ref="mainProductsRef" class="courses_list">
-      <ProductSkeleton v-if="isMediaLoading" v-for="product in productsStore.availableProducts" :key="product.id" />
-      <div v-show="!isMediaLoading" v-for="(course, i) in productsStore.availableProducts" :key="course.id" class="courses_course course"
-           @click="openCourse(course, course?.release_date)">
+      <template v-if="isMediaLoading">
+        <ProductSkeleton v-for="product in productsStore.availableProducts" :key="product.id" />
+      </template>
+      <template v-else>
+        <div v-for="course in productsStore.availableProducts" :key="course.id" class="courses_course course"
+             @click="openCourse(course, course?.release_date)">
         <div v-if="productStatusFunc(course)" class="course_product_date">
           <component v-if="productStatusFunc(course).svg" :is="productStatusFunc(course).svg" />
           <span>{{ productStatusFunc(course).text }}</span>
@@ -40,7 +43,8 @@
             </button>
           </div>
         </div>
-      </div>
+        </div>
+      </template>
     </div>
 
     <Modal :is-open="modalDetails.is_open" position="bottom" @close-modal="closeModal" :title="modalDetails.title">

@@ -3,7 +3,7 @@
     <div v-for="(bonus, i) in data" :key="i" class="course-bonuses__block">
       <span class="course-bonuses__block_title">{{bonus.title}}</span>
       <div class="course-bonuses__block_list">
-        <div v-for="item in bonus.bonuses" class="course-bonuses__block_item">
+        <div v-for="(item, index) in bonus.bonuses" :key="`bonus-${i}-${index}`" class="course-bonuses__block_item">
           <div class="inner">
             <SVGFileIcon v-if="item.filename?.length"/>
             <SVGLinkInField v-if="item.url?.length" />
