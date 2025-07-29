@@ -27,7 +27,7 @@ import {useI18n} from "vue-i18n";
 const i18n = useI18n();
 const isLangListVisible = ref(false);
 const langListRef = ref(null);
-const languages = [{code: 'ru', name: 'Русский'}, {code: 'uk', name: 'Українська'}];
+const languages = [{code: 'ru', name: 'Русский'}];
 
 onClickOutside(langListRef, () => {isLangListVisible.value = false})
 

@@ -178,33 +178,6 @@ const calcTotalCorrectAnswers = () => {
   successAnswersInPercent.value = Math.round((answersStatistic.value.correct / props.quiz.length) * 100);
 }
 
-// const handleNextQuestion = () => {
-//   if (isLastQuestion.value) {
-//     calcTotalCorrectAnswers();
-//     quizStore.updateQuiz({
-//       lesson_id: props.id,
-//       quiz: answersStatisticForLocaleStorage.value,
-//       total_result: successAnswersInPercent.value
-//     });
-//     homeworkStore.saveReply({
-//       lesson_id: props.id,
-//       type: 'quiz',
-//       reply: {
-//         title: {en: lessonStore.selectedLesson.language.en.title, uk: lessonStore.selectedLesson.language.uk.title,},
-//         text: `${successAnswersInPercent.value}%`
-//       }
-//     })
-//     courseStore.checkAsOpened(lessonStore.selectedLesson.lessonId, {is_homework_done: true});
-//     isResultOpen.value = true;
-//
-//     return;
-//   }
-//
-//   currentQuestionId.value += 1;
-//   isAnswerChecked.value = false;
-//   chosenAnswers.value = [];
-//   isAnswerCorrect.value = false;
-// };
 
 onMounted(() => {
   navBarStore.toggleNavBarVisibility();

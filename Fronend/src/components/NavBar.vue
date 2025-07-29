@@ -18,7 +18,7 @@ const navTabs = computed(() => {
     },
     {
       value: 'main',
-      title: {en: "Хоум", uk: "Хоум"},
+      title: "Хоум",
       icon: home,
     },
     {
